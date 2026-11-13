@@ -1,0 +1,21 @@
+problem_id,category,problem_description
+P01,Basic Logic,Check whether a number is prime
+P02,Basic Logic,Reverse a string
+P03,Basic Logic,Calculate factorial of a number
+P04,Basic Logic,Check whether a string is palindrome
+P05,Sorting,Sort a list of integers
+P06,Arrays,Find the largest element in an array
+P07,Arrays,Find duplicate elements in an array
+P08,Searching,Implement binary search
+P09,Searching,Implement linear search
+P10,Basic Logic,Generate Fibonacci series
+P11,String,Count vowels in a string
+P12,String,Check whether two strings are anagrams
+P13,Basic Logic,Find GCD of two numbers
+P14,Arrays,Remove duplicates from a list
+P15,Arrays,Merge two sorted arrays
+P16,Stack,Check balanced parentheses
+P17,Arrays,Find the second largest element
+P18,String,Count word frequency
+P19,Matrix,Multiply two matrices
+P20,Security,Validate password strength

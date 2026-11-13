@@ -1,0 +1,1509 @@
+submission_id,problem_id,problem_description,model,variation,code
+P01_S1,P01,Check whether a number is prime,qwen2.5-coder:3b,1,"def is_prime(num):
+    """"""Check if a number is prime.
+
+    Parameters:
+    num (int): The number to check.
+
+    Returns:
+    bool: True if num is prime, False otherwise.
+
+    Examples:
+    >>> is_prime(6)
+    False
+    >>> is_prime(101)
+    True
+    >>> is_prime(11)
+    True
+    >>> is_prime(13441)
+    True
+    >>> is_prime(61)
+    True
+    >>> is_prime(4)
+    False
+    >>> is_prime(1)
+    False
+    """"""
+    if num <= 1:
+        return False
+    if num <= 3:
+        return True
+    if num % 2 == 0 or num % 3 == 0:
+        return False
+    i = 5
+    while i * i <= num:
+        if num % i == 0 or num % (i + 2) == 0:
+            return False
+        i += 6
+    return True"
+P01_S2,P01,Check whether a number is prime,qwen2.5-coder:3b,2,"def is_prime(n):
+    """"""Check if a number is prime.""""""
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+# Example usage:
+number = 29
+print(is_prime(number))  # Output: True
+
+number = 4
+print(is_prime(number))  # Output: False
+
+number = 1
+print(is_prime(number))  # Output: False
+
+number = 2
+print(is_prime(number))  # Output: True
+
+number = 2048
+print(is_prime(number))  # Output: False"
+P01_S3,P01,Check whether a number is prime,qwen2.5-coder:3b,3,"def is_prime(n):
+    """"""Check if a number is prime.""""""
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+# Example usage:
+number = 29
+print(f""{number} is prime: {is_prime(number)}"")"
+P02_S1,P02,Reverse a string,qwen2.5-coder:3b,1,"def reverse_string(input_string):
+    """"""
+    Reverses the given string.
+
+    Parameters:
+    input_string (str): The string to be reversed.
+
+    Returns:
+    str: The reversed string.
+    """"""
+    # Handle edge cases
+    if not input_string:
+        return input_string
+
+    # Reverse the string using slicing
+    reversed_string = input_string[::-1]
+
+    return reversed_string
+
+# Example usage:
+print(reverse_string(""hello""))  # Output: ""olleh""
+print(reverse_string(""""))        # Output: """"
+print(reverse_string(""a""))       # Output: ""a"""
+P02_S2,P02,Reverse a string,qwen2.5-coder:3b,2,"def reverse_string(s: str) -> str:
+    # Edge case: if the string is empty, return an empty string
+    if not s:
+        return s
+    
+    # Use Python's slicing feature to reverse the string
+    return s[::-1]
+
+# Example usage:
+if __name__ == ""__main__"":
+    print(reverse_string(""hello""))  # Output: ""olleh""
+    print(reverse_string(""""))       # Output: """"
+    print(reverse_string(""a""))       # Output: ""a""
+    print(reverse_string(""aabbcc""))  # Output: ""ccbaab"""
+P02_S3,P02,Reverse a string,qwen2.5-coder:3b,3,"def reverse_string(s):
+    """"""
+    Reverse a string using slicing.
+
+    Args:
+    s (str): The input string to be reversed.
+
+    Returns:
+    str: The reversed string.
+    """"""
+    # Using slicing to reverse the string
+    return s[::-1]
+
+# Test the function with some examples
+print(reverse_string(""hello""))    # Output: ""olleh""
+print(reverse_string(""world""))   # Output: ""dlrow""
+print(reverse_string(""Qwen""))     # Output: ""nwEq""
+print(reverse_string(""""))        # Output: """"
+print(reverse_string(""a""))        # Output: ""a""
+print(reverse_string(""ab""))       # Output: ""ba""
+print(reverse_string(""12345""))   # Output: ""54321"""
+P03_S1,P03,Calculate factorial of a number,qwen2.5-coder:3b,1,"def factorial(n):
+    """"""
+    Calculate the factorial of a non-negative integer n.
+    
+    Parameters:
+    n (int): A non-negative integer whose factorial is to be calculated.
+    
+    Returns:
+    int: The factorial of n.
+    
+    Raises:
+    ValueError: If n is negative.
+    """"""
+    if n < 0:
+        raise ValueError(""Factorial is not defined for negative numbers"")
+    elif n == 0 or n == 1:
+        return 1
+    else:
+        result = 1
+        for i in range(2, n + 1):
+            result *= i
+        return result
+
+# Example usage:
+try:
+    print(factorial(5))  # Output: 120
+    print(factorial(0))  # Output: 1
+    print(factorial(-1)) # Raises ValueError
+except ValueError as e:
+    print(e)"
+P03_S2,P03,Calculate factorial of a number,qwen2.5-coder:3b,2,"def factorial(n):
+    """"""
+    Calculate the factorial of a non-negative integer n.
+
+    Args:
+    n (int): A non-negative integer.
+
+    Returns:
+    int: The factorial of n.
+
+    Raises:
+    ValueError: If n is negative.
+    """"""
+    if n < 0:
+        raise ValueError(""Input must be a non-negative integer."")
+    
+    # Base case: factorial of 0 or 1 is 1
+    if n == 0 or n == 1:
+        return 1
+    
+    # Initialize result
+    result = 1
+    
+    # Iterative calculation of factorial
+    for i in range(2, n + 1):
+        result *= i
+    
+    return result
+
+# Example usage
+try:
+    print(factorial(5))  # Output: 120
+    print(factorial(0))  # Output: 1
+    print(factorial(1))  # Output: 1
+    print(factorial(10)) # Output: 3628800
+    # Uncomment the line below to test the edge case
+    # print(factorial(-1)) # This will raise a ValueError
+except ValueError as e:
+    print(e)"
+P03_S3,P03,Calculate factorial of a number,qwen2.5-coder:3b,3,"def factorial(n):
+    # Handle edge cases
+    if n < 0:
+        return ""Factorial is not defined for negative numbers.""
+    elif n == 0 or n == 1:
+        return 1
+    else:
+        # Recursive call
+        return n * factorial(n - 1)
+
+# Example usage:
+number = 5
+result = factorial(number)
+print(f""The factorial of {number} is {result}"")"
+P04_S1,P04,Check whether a string is palindrome,qwen2.5-coder:3b,1,"def is_palindrome(s):
+    # Convert the string to lowercase to ensure the check is case-insensitive
+    s = s.lower()
+    
+    # Remove any non-alphanumeric characters to focus only on the content
+    s = ''.join(char for char in s if char.isalnum())
+    
+    # Check if the cleaned string is equal to its reverse
+    return s == s[::-1]
+
+# Example usage:
+print(is_palindrome(""A man, a plan, a canal: Panama""))  # Output: True
+print(is_palindrome(""race a car""))  # Output: False
+print(is_palindrome("" ""))  # Output: True (empty string is considered a palindrome)"
+P04_S2,P04,Check whether a string is palindrome,qwen2.5-coder:3b,2,"def is_palindrome(s):
+    # Remove non-alphanumeric characters and convert to lowercase
+    cleaned_s = ''.join(char.lower() for char in s if char.isalnum())
+    
+    # Check if the cleaned string is equal to its reverse
+    return cleaned_s == cleaned_s[::-1]
+
+# Example usage
+print(is_palindrome(""A man, a plan, a canal: Panama""))  # Output: True
+print(is_palindrome(""race a car""))  # Output: False
+print(is_palindrome("" ""))  # Output: True
+print(is_palindrome(""""))  # Output: True"
+P04_S3,P04,Check whether a string is palindrome,qwen2.5-coder:3b,3,"def is_palindrome(s):
+    # Convert the string to lowercase to make the check case-insensitive
+    s = s.lower()
+    
+    # Remove any non-alphanumeric characters
+    s = ''.join(char for char in s if char.isalnum())
+    
+    # Check if the string is equal to its reverse
+    return s == s[::-1]
+
+# Test cases
+print(is_palindrome(""A man, a plan, a canal: Panama""))  # True
+print(is_palindrome(""racecar""))  # True
+print(is_palindrome(""hello""))  # False
+print(is_palindrome(""No lemon, no melon""))  # True
+print(is_palindrome(""Was it a car or a cat I saw?""))  # True
+print(is_palindrome(""Not a palindrome""))  # False"
+P05_S1,P05,Sort a list of integers,qwen2.5-coder:3b,1,"def sort_list_of_integers(numbers):
+    """"""
+    Sorts a list of integers in ascending order.
+
+    Parameters:
+    numbers (list): A list of integers to be sorted.
+
+    Returns:
+    list: A new list containing the sorted integers.
+    """"""
+    if not numbers:
+        return []
+
+    # Use the built-in sorted function to sort the list
+    sorted_numbers = sorted(numbers)
+    return sorted_numbers
+
+# Example usage:
+numbers = [5, 2, 9, 1, 5, 6]
+sorted_numbers = sort_list_of_integers(numbers)
+print(sorted_numbers)"
+P05_S2,P05,Sort a list of integers,qwen2.5-coder:3b,2,"def bubble_sort(arr):
+    n = len(arr)
+    # Traverse through all array elements
+    for i in range(n):
+        # Last i elements are already in place
+        for j in range(0, n-i-1):
+            # Traverse the array from 0 to n-i-1
+            # Swap if the element found is greater than the next element
+            if arr[j] > arr[j+1]:
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+
+def selection_sort(arr):
+    n = len(arr)
+    # Traverse through all array elements
+    for i in range(n):
+        # Find the minimum element in remaining unsorted array
+        min_idx = i
+        for j in range(i+1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        # Swap the found minimum element with the first element
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+
+def insertion_sort(arr):
+    # Traverse through 1 to len(arr)
+    for i in range(1, len(arr)):
+        key = arr[i]
+        # Move elements of arr[0..i-1], that are greater than key,
+        # to one position ahead of their current position
+        j = i-1
+        while j >=0 and key < arr[j]:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+
+def sort_list(arr):
+    # Choose the sorting algorithm
+    # You can change this to any of the functions above
+    # For simplicity, let's use bubble sort
+    bubble_sort(arr)
+    return arr
+
+# Example usage
+if __name__ == ""__main__"":
+    # Example list of integers
+    numbers = [64, 34, 25, 12, 22, 11, 90]
+    
+    # Sort the list
+    sorted_numbers = sort_list(numbers)
+    
+    # Print the sorted list
+    print(""Sorted list:"", sorted_numbers)"
+P05_S3,P05,Sort a list of integers,qwen2.5-coder:3b,3,"def sort_list_of_integers(numbers):
+    """"""
+    Sorts a list of integers in ascending order.
+
+    Args:
+    numbers (list): A list of integers to be sorted.
+
+    Returns:
+    list: A new list containing the sorted integers.
+    """"""
+    return sorted(numbers)
+
+# Example usage:
+if __name__ == ""__main__"":
+    # Test cases
+    print(sort_list_of_integers([]))              # Output: []
+    print(sort_list_of_integers([5, 2, 9, 1, 5, 6]))  # Output: [1, 2, 5, 5, 6, 9]
+    print(sort_list_of_integers([3, 3, 3, 3]))      # Output: [3, 3, 3, 3]
+    print(sort_list_of_integers([10, 20, 15, 25, 5])) # Output: [5, 10, 15, 20, 25]"
+P06_S1,P06,Find the largest element in an array,qwen2.5-coder:3b,1,"def find_largest_element(arr):
+    # Check if the array is empty
+    if not arr:
+        return None  # Return None if the array is empty
+
+    # Initialize the largest element with the first element of the array
+    largest = arr[0]
+
+    # Iterate through the array starting from the second element
+    for num in arr[1:]:
+        # Update largest if a larger element is found
+        if num > largest:
+            largest = num
+
+    return largest
+
+# Example usage:
+array = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
+largest = find_largest_element(array)
+print(""The largest element is:"", largest)"
+P06_S2,P06,Find the largest element in an array,qwen2.5-coder:3b,2,"def find_largest_element(arr):
+    """"""
+    Find the largest element in an array.
+
+    Parameters:
+    arr (list): A list of numbers.
+
+    Returns:
+    int/float: The largest element in the array.
+    
+    Raises:
+    ValueError: If the array is empty or contains non-numeric values.
+    """"""
+    if not arr:
+        raise ValueError(""Array is empty"")
+    
+    try:
+        # Use max() to find the largest element
+        return max(arr)
+    except TypeError:
+        raise ValueError(""Array contains non-numeric values"")
+
+# Example usage:
+try:
+    print(find_largest_element([3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]))  # Output: 9
+    print(find_largest_element([10, 20, 30, 40, 50]))  # Output: 50
+    print(find_largest_element([]))  # Raises ValueError
+    print(find_largest_element([1, 'a', 3]))  # Raises ValueError
+except ValueError as e:
+    print(e)"
+P06_S3,P06,Find the largest element in an array,qwen2.5-coder:3b,3,"def find_largest_element(arr):
+    # Check if the array is empty
+    if not arr:
+        raise ValueError(""Array is empty"")
+    
+    # Initialize the largest element with the first element of the array
+    largest = arr[0]
+    
+    # Iterate through the array starting from the second element
+    for num in arr[1:]:
+        # Update the largest element if the current element is greater
+        if num > largest:
+            largest = num
+    
+    return largest
+
+# Example usage:
+try:
+    arr = [3, 5, 7, 2, 8, 1]
+    print(""The largest element is:"", find_largest_element(arr))
+except ValueError as e:
+    print(e)"
+P07_S1,P07,Find duplicate elements in an array,qwen2.5-coder:3b,1,"def find_duplicates(arr):
+    """"""
+    This function takes an array and returns a list of duplicate elements.
+    
+    Parameters:
+    arr (list): The input array to check for duplicates.
+    
+    Returns:
+    list: A list containing the duplicate elements found in the input array.
+    """"""
+    seen = set()
+    duplicates = set()
+    
+    for element in arr:
+        if element in seen:
+            duplicates.add(element)
+        else:
+            seen.add(element)
+    
+    return list(duplicates)
+
+# Example usage:
+arr = [1, 2, 3, 4, 5, 2, 3, 6, 7, 1]
+print(find_duplicates(arr))  # Output: [1, 2, 3]"
+P07_S2,P07,Find duplicate elements in an array,qwen2.5-coder:3b,2,"def find_duplicates(arr):
+    # Create a set to track seen elements
+    seen = set()
+    # List to store duplicate elements
+    duplicates = []
+    
+    # Iterate through the array
+    for num in arr:
+        # If the number is already in the set, it's a duplicate
+        if num in seen:
+            duplicates.append(num)
+        else:
+            # Otherwise, add the number to the set
+            seen.add(num)
+    
+    # Return the list of duplicates
+    return duplicates
+
+# Example usage:
+array = [1, 2, 3, 2, 4, 5, 3, 6]
+print(find_duplicates(array))  # Output: [2, 3]"
+P07_S3,P07,Find duplicate elements in an array,qwen2.5-coder:3b,3,"def find_duplicates(arr):
+    # Dictionary to store the count of each element
+    count_dict = {}
+    
+    # Iterate over each element in the array
+    for element in arr:
+        # If the element is already in the dictionary, increment its count
+        if element in count_dict:
+            count_dict[element] += 1
+        # Otherwise, add the element to the dictionary with a count of 1
+        else:
+            count_dict[element] = 1
+    
+    # List to store the duplicate elements
+    duplicates = []
+    
+    # Iterate over the dictionary items
+    for element, count in count_dict.items():
+        # If the count is greater than 1, add the element to the duplicates list
+        if count > 1:
+            duplicates.append(element)
+    
+    return duplicates
+
+# Example usage:
+array = [1, 2, 3, 4, 5, 2, 3, 6, 7, 8, 9, 10]
+print(find_duplicates(array))  # Output: [2, 3]"
+P08_S1,P08,Implement binary search,qwen2.5-coder:3b,1,"def binary_search(arr, target):
+    """"""
+    Perform binary search on a sorted array to find the target value.
+    
+    Parameters:
+    arr (list): A sorted list of integers.
+    target (int): The integer to search for in the list.
+    
+    Returns:
+    int: The index of the target value if found, otherwise -1.
+    """"""
+    left, right = 0, len(arr) - 1
+    
+    while left <= right:
+        mid = left + (right - left) // 2  # Use integer division to avoid overflow
+        
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    
+    return -1
+
+# Example usage:
+sorted_array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+target_value = 7
+print(binary_search(sorted_array, target_value))  # Output: 6"
+P08_S2,P08,Implement binary search,qwen2.5-coder:3b,2,"def binary_search(arr, target):
+    """"""
+    Perform a binary search on a sorted array to find the target element.
+
+    Parameters:
+    arr (list): A sorted list of elements.
+    target (int): The element to search for.
+
+    Returns:
+    int: The index of the target element if found, otherwise -1.
+    """"""
+    left, right = 0, len(arr) - 1
+
+    while left <= right:
+        mid = left + (right - left) // 2
+
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    return -1
+
+# Edge-case testing
+assert binary_search([], 5) == -1
+assert binary_search([1], 1) == 0
+assert binary_search([2, 4, 6, 8, 10], 8) == 3
+assert binary_search([1, 3, 5, 7, 9, 11, 13, 15], 7) == 3
+assert binary_search([1, 3, 5, 7, 9, 11, 13, 15], 10) == -1
+assert binary_search([1, 3, 5, 7, 9, 11, 13, 15], 16) == -1
+assert binary_search([1, 3, 5, 7, 9, 11, 13, 15], 2) == -1
+assert binary_search([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5) == 4"
+P08_S3,P08,Implement binary search,qwen2.5-coder:3b,3,"def binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+    
+    while left <= right:
+        mid = left + (right - left) // 2
+        
+        # Check if target is present at mid
+        if arr[mid] == target:
+            return mid
+        # If target is greater, ignore left half
+        elif arr[mid] < target:
+            left = mid + 1
+        # If target is smaller, ignore right half
+        else:
+            right = mid - 1
+    
+    # Target is not present in the array
+    return -1
+
+# Example usage:
+arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+target = 7
+result = binary_search(arr, target)
+
+if result != -1:
+    print(f""Element found at index {result}"")
+else:
+    print(""Element not found in the array"")"
+P09_S1,P09,Implement linear search,qwen2.5-coder:3b,1,"def linear_search(arr, target):
+    """"""
+    Perform a linear search on the given list to find the target value.
+
+    Parameters:
+    arr (list): The list to search through.
+    target: The value to search for in the list.
+
+    Returns:
+    int: The index of the target value if found, otherwise -1.
+    """"""
+    # Iterate through the list
+    for index, value in enumerate(arr):
+        # Check if the current value matches the target
+        if value == target:
+            return index  # Return the index if found
+    return -1  # Return -1 if the target is not found
+
+# Example usage:
+if __name__ == ""__main__"":
+    # Test cases
+    test_list = [10, 23, 45, 70, 11, 15]
+    target_value = 70
+
+    result = linear_search(test_list, target_value)
+    if result != -1:
+        print(f""Target {target_value} found at index {result}."")
+    else:
+        print(f""Target {target_value} not found in the list."")"
+P09_S2,P09,Implement linear search,qwen2.5-coder:3b,2,"def linear_search(arr, target):
+    """"""
+    Perform a linear search on a list to find the index of the target value.
+    
+    :param arr: List of elements to search through.
+    :param target: The value to search for in the list.
+    :return: The index of the target if found, otherwise -1.
+    """"""
+    for index, element in enumerate(arr):
+        if element == target:
+            return index
+    return -1
+
+# Example usage:
+if __name__ == ""__main__"":
+    test_list = [10, 20, 30, 40, 50]
+    target_value = 30
+    result = linear_search(test_list, target_value)
+    print(f""The target {target_value} is at index {result} in the list."")
+    
+    # Edge cases:
+    empty_list = []
+    target_not_found = 100
+    print(f""Searching in empty list: {linear_search(empty_list, target_not_found)}"")
+    print(f""Searching for non-existent target: {linear_search(test_list, target_not_found)}"")"
+P09_S3,P09,Implement linear search,qwen2.5-coder:3b,3,"def linear_search(arr, target):
+    if not arr:
+        return -1  # Return -1 if the array is empty
+
+    for index, element in enumerate(arr):
+        if element == target:
+            return index  # Return the index of the target element
+
+    return -1  # Return -1 if the target element is not found
+
+# Example usage:
+try:
+    arr = [10, 20, 30, 40, 50]
+    target = 30
+    result = linear_search(arr, target)
+    if result != -1:
+        print(f""Element {target} found at index {result}."")
+    else:
+        print(f""Element {target} not found in the array."")
+except TypeError:
+    print(""The input must be an iterable."")"
+P10_S1,P10,Generate Fibonacci series,qwen2.5-coder:3b,1,"def generate_fibonacci(n):
+    if n <= 0:
+        return []
+    elif n == 1:
+        return [0]
+    elif n == 2:
+        return [0, 1]
+    
+    fibonacci_series = [0, 1]
+    for i in range(2, n):
+        next_value = fibonacci_series[i - 1] + fibonacci_series[i - 2]
+        fibonacci_series.append(next_value)
+    
+    return fibonacci_series
+
+# Example usage:
+n_terms = 10
+fibonacci_series = generate_fibonacci(n_terms)
+print(f""Fibonacci series up to {n_terms} terms: {fibonacci_series}"")"
+P10_S2,P10,Generate Fibonacci series,qwen2.5-coder:3b,2,"def fibonacci(n):
+    """"""
+    Generate the Fibonacci series up to the nth number.
+
+    Args:
+    n (int): The position in the Fibonacci series to generate up to.
+
+    Returns:
+    list: A list containing the Fibonacci series up to the nth number.
+    """"""
+    # Edge case: if n is less than 0, return an empty list
+    if n < 0:
+        return []
+    
+    # Edge case: if n is 0, return a list containing only 0
+    elif n == 0:
+        return [0]
+    
+    # Edge case: if n is 1, return a list containing only 0 and 1
+    elif n == 1:
+        return [0, 1]
+    
+    # Initialize the first two Fibonacci numbers
+    fib_series = [0, 1]
+    
+    # Generate the Fibonacci series up to the nth number
+    for i in range(2, n + 1):
+        next_fib = fib_series[i - 1] + fib_series[i - 2]
+        fib_series.append(next_fib)
+    
+    return fib_series
+
+# Example usage:
+n = 10
+print(f""Fibonacci series up to {n}: {fibonacci(n)}"")"
+P10_S3,P10,Generate Fibonacci series,qwen2.5-coder:3b,3,"def fibonacci_series(n):
+    if n <= 0:
+        return []
+    elif n == 1:
+        return [0]
+    elif n == 2:
+        return [0, 1]
+    
+    # Initialize the first two Fibonacci numbers
+    fib_sequence = [0, 1]
+    
+    # Generate the Fibonacci series up to n
+    for i in range(2, n):
+        next_fib = fib_sequence[-1] + fib_sequence[-2]
+        fib_sequence.append(next_fib)
+    
+    return fib_sequence
+
+# Example usage:
+n = 10
+print(fibonacci_series(n))"
+P11_S1,P11,Count vowels in a string,qwen2.5-coder:3b,1,"def count_vowels(input_string):
+    """"""
+    Counts the number of vowels in the provided string.
+
+    Args:
+    input_string (str): The string to count vowels in.
+
+    Returns:
+    int: The number of vowels in the string.
+    """"""
+    vowels = ""aeiouAEIOU""
+    count = 0
+    for char in input_string:
+        if char in vowels:
+            count += 1
+    return count
+
+# Test the function with various inputs
+test_strings = [
+    """",  # Empty string
+    ""Hello World!"",  # String with punctuation and spaces
+    ""AEIOUaeiou"",  # String with all vowels
+    ""bcdfghjklmnpqrstvwxyz"",  # String with no vowels
+    ""Python is great!"",  # String with multiple vowels and punctuation
+]
+
+for s in test_strings:
+    print(f""The number of vowels in '{s}' is {count_vowels(s)}."")"
+P11_S2,P11,Count vowels in a string,qwen2.5-coder:3b,2,"def count_vowels(s: str) -> int:
+    """"""
+    Count the number of vowels in a given string.
+    
+    Parameters:
+    s (str): The input string to count vowels in.
+    
+    Returns:
+    int: The number of vowels in the string.
+    """"""
+    # Define the set of vowels
+    vowels = set('aeiouAEIOU')
+    # Initialize a counter for vowels
+    count = 0
+    # Iterate over each character in the string
+    for char in s:
+        # Increment the counter if the character is a vowel
+        if char in vowels:
+            count += 1
+    return count
+
+# Test cases to verify the correctness of the function
+def test_count_vowels():
+    assert count_vowels(""Hello, World!"") == 3, ""Test case 1 failed""
+    assert count_vowels(""AeIoU"") == 5, ""Test case 2 failed""
+    assert count_vowels("""") == 0, ""Test case 3 failed""
+    assert count_vowels(""BCDFGHJKLMNPQRSTVWXYZ"") == 0, ""Test case 4 failed""
+    assert count_vowels(""AEIOUaeiou"") == 10, ""Test case 5 failed""
+    print(""All test cases passed!"")
+
+# Run the test cases
+test_count_vowels()"
+P11_S3,P11,Count vowels in a string,qwen2.5-coder:3b,3,"def count_vowels(input_string):
+    # Convert the input string to lowercase to handle case insensitivity
+    input_string = input_string.lower()
+    
+    # Define a set of vowels for quick lookup
+    vowels = set('aeiou')
+    
+    # Initialize a counter for vowels
+    vowel_count = 0
+    
+    # Iterate over each character in the string
+    for char in input_string:
+        # Check if the character is a vowel
+        if char in vowels:
+            vowel_count += 1
+    
+    return vowel_count
+
+# Example usage:
+input_str = ""Hello, World!""
+vowel_count = count_vowels(input_str)
+print(f""The number of vowels in '{input_str}' is: {vowel_count}"")"
+P12_S1,P12,Check whether two strings are anagrams,qwen2.5-coder:3b,1,"def are_anagrams(str1, str2):
+    # Remove any whitespace and convert strings to lowercase
+    str1 = str1.replace("" "", """").lower()
+    str2 = str2.replace("" "", """").lower()
+    
+    # If lengths are not equal, they cannot be anagrams
+    if len(str1) != len(str2):
+        return False
+    
+    # Sort the characters of both strings
+    sorted_str1 = sorted(str1)
+    sorted_str2 = sorted(str2)
+    
+    # Compare the sorted versions of the strings
+    return sorted_str1 == sorted_str2
+
+# Example usage
+print(are_anagrams(""listen"", ""silent""))  # Output: True
+print(are_anagrams(""hello"", ""world""))    # Output: False
+print(are_anagrams(""Dormitory"", ""dirty room""))  # Output: True"
+P12_S2,P12,Check whether two strings are anagrams,qwen2.5-coder:3b,2,"def are_anagrams(str1, str2):
+    # Remove whitespace and convert strings to lowercase for comparison
+    str1 = str1.replace("" "", """").lower()
+    str2 = str2.replace("" "", """").lower()
+    
+    # If lengths are not the same, they cannot be anagrams
+    if len(str1) != len(str2):
+        return False
+    
+    # Sort the characters of both strings
+    sorted_str1 = sorted(str1)
+    sorted_str2 = sorted(str2)
+    
+    # Compare the sorted strings
+    return sorted_str1 == sorted_str2
+
+# Test cases
+print(are_anagrams(""listen"", ""silent""))  # True
+print(are_anagrams(""triangle"", ""integral""))  # True
+print(are_anagrams(""apple"", ""pale""))  # False
+print(are_anagrams(""Dormitory"", ""dirty room""))  # True (ignoring spaces and case)
+print(are_anagrams(""hello"", ""bello""))  # False
+print(are_anagrams(""aabbcc"", ""abcabc""))  # True
+print(are_anagrams("""", """"))  # True"
+P12_S3,P12,Check whether two strings are anagrams,qwen2.5-coder:3b,3,"def are_anagrams(str1, str2):
+    # Remove any whitespace and convert to lowercase for a case-insensitive comparison
+    str1 = str1.replace("" "", """").lower()
+    str2 = str2.replace("" "", """").lower()
+    
+    # Check if the sorted characters of both strings are equal
+    return sorted(str1) == sorted(str2)
+
+# Example usage:
+print(are_anagrams(""listen"", ""silent""))  # Output: True
+print(are_anagrams(""triangle"", ""integral""))  # Output: True
+print(are_anagrams(""apple"", ""papel""))  # Output: True
+print(are_anagrams(""rat"", ""car""))  # Output: False
+print(are_anagrams(""a"", ""A""))  # Output: True"
+P13_S1,P13,Find GCD of two numbers,qwen2.5-coder:3b,1,"def gcd(a, b):
+    # Handle edge cases
+    if a == 0 and b == 0:
+        return None  # GCD is undefined for both 0
+    elif a == 0:
+        return b  # GCD is b if a is 0
+    elif b == 0:
+        return a  # GCD is a if b is 0
+    
+    # Euclidean algorithm
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+# Example usage
+num1 = 48
+num2 = 18
+print(f""The GCD of {num1} and {num2} is {gcd(num1, num2)}"")"
+P13_S2,P13,Find GCD of two numbers,qwen2.5-coder:3b,2,"def gcd(a, b):
+    # Handle edge cases
+    if a == 0 or b == 0:
+        return a if a != 0 else b
+    
+    # Euclidean algorithm
+    while b != 0:
+        a, b = b, a % b
+    
+    return a
+
+# Example usage:
+print(gcd(48, 18))  # Output: 6
+print(gcd(0, 5))   # Output: 5
+print(gcd(5, 0))   # Output: 5
+print(gcd(0, 0))   # Output: 0
+print(gcd(17, 23))  # Output: 1"
+P13_S3,P13,Find GCD of two numbers,qwen2.5-coder:3b,3,"def gcd(a, b):
+    # Handle edge cases
+    if a == 0 or b == 0:
+        return 0
+    elif a == b:
+        return a
+    
+    # Apply the Euclidean algorithm
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+# Example usage
+num1 = 48
+num2 = 18
+result = gcd(num1, num2)
+print(f""The GCD of {num1} and {num2} is {result}"")"
+P14_S1,P14,Remove duplicates from a list,qwen2.5-coder:3b,1,"def remove_duplicates(input_list):
+    # Create a set to store unique elements
+    unique_elements = set(input_list)
+    # Convert the set back to a list
+    return list(unique_elements)
+
+# Example usage:
+my_list = [1, 2, 2, 3, 4, 4, 5]
+print(remove_duplicates(my_list))  # Output: [1, 2, 3, 4, 5]
+
+# Edge cases:
+# 1. Empty list
+print(remove_duplicates([]))  # Output: []
+
+# 2. List with all identical elements
+print(remove_duplicates([1, 1, 1, 1]))  # Output: [1]
+
+# 3. List with no duplicates
+print(remove_duplicates([1, 2, 3, 4, 5]))  # Output: [1, 2, 3, 4, 5]
+
+# 4. List with duplicates in different orders
+print(remove_duplicates([5, 3, 2, 3, 1, 5, 2]))  # Output: [1, 2, 3, 5]"
+P14_S2,P14,Remove duplicates from a list,qwen2.5-coder:3b,2,"def remove_duplicates(input_list):
+    # Edge case: if the input list is empty or contains only one element, return the list as is
+    if len(input_list) <= 1:
+        return input_list
+    
+    # Create an empty list to store unique elements
+    unique_list = []
+    
+    # Iterate over each element in the input list
+    for element in input_list:
+        # Check if the element is not already in the unique list
+        if element not in unique_list:
+            # Add the element to the unique list
+            unique_list.append(element)
+    
+    # Return the list of unique elements
+    return unique_list
+
+# Example usage:
+# Input lists
+list1 = [1, 2, 2, 3, 4, 4, 5]
+list2 = [10, 20, 20, 20, 30]
+list3 = []
+list4 = [5]
+
+# Remove duplicates
+result1 = remove_duplicates(list1)
+result2 = remove_duplicates(list2)
+result3 = remove_duplicates(list3)
+result4 = remove_duplicates(list4)
+
+# Print results
+print(""Result 1:"", result1)  # Output: [1, 2, 3, 4, 5]
+print(""Result 2:"", result2)  # Output: [10, 20, 30]
+print(""Result 3:"", result3)  # Output: []
+print(""Result 4:"", result4)  # Output: [5]"
+P14_S3,P14,Remove duplicates from a list,qwen2.5-coder:3b,3,"def remove_duplicates(input_list):
+    # Convert the list to a set to remove duplicates, then convert it back to a list
+    return list(set(input_list))
+
+# Example usage:
+my_list = [1, 2, 2, 3, 4, 4, 5]
+result = remove_duplicates(my_list)
+print(result)  # Output: [1, 2, 3, 4, 5]"
+P15_S1,P15,Merge two sorted arrays,qwen2.5-coder:3b,1,"def merge_sorted_arrays(arr1, arr2):
+    # Initialize pointers for both arrays
+    i, j = 0, 0
+    # Initialize an empty list to store the merged result
+    merged_array = []
+    
+    # Traverse both arrays and append the smaller element to the merged array
+    while i < len(arr1) and j < len(arr2):
+        if arr1[i] < arr2[j]:
+            merged_array.append(arr1[i])
+            i += 1
+        else:
+            merged_array.append(arr2[j])
+            j += 1
+    
+    # If there are remaining elements in arr1, append them
+    while i < len(arr1):
+        merged_array.append(arr1[i])
+        i += 1
+    
+    # If there are remaining elements in arr2, append them
+    while j < len(arr2):
+        merged_array.append(arr2[j])
+        j += 1
+    
+    return merged_array
+
+# Example usage:
+arr1 = [1, 3, 5, 7]
+arr2 = [2, 4, 6, 8]
+result = merge_sorted_arrays(arr1, arr2)
+print(result)  # Output: [1, 2, 3, 4, 5, 6, 7, 8]"
+P15_S2,P15,Merge two sorted arrays,qwen2.5-coder:3b,2,"def merge_sorted_arrays(arr1, arr2):
+    # Check if either of the arrays is empty
+    if not arr1:
+        return arr2
+    if not arr2:
+        return arr1
+
+    merged = []
+    i, j = 0, 0
+
+    # Traverse both arrays and merge them in sorted order
+    while i < len(arr1) and j < len(arr2):
+        if arr1[i] < arr2[j]:
+            merged.append(arr1[i])
+            i += 1
+        else:
+            merged.append(arr2[j])
+            j += 1
+
+    # If there are remaining elements in arr1, add them
+    while i < len(arr1):
+        merged.append(arr1[i])
+        i += 1
+
+    # If there are remaining elements in arr2, add them
+    while j < len(arr2):
+        merged.append(arr2[j])
+        j += 1
+
+    return merged
+
+# Example usage:
+arr1 = [1, 3, 5, 7]
+arr2 = [2, 4, 6, 8]
+print(merge_sorted_arrays(arr1, arr2))  # Output: [1, 2, 3, 4, 5, 6, 7, 8]"
+P15_S3,P15,Merge two sorted arrays,qwen2.5-coder:3b,3,"def merge_sorted_arrays(arr1, arr2):
+    # Initialize pointers for both arrays and a result array
+    i, j = 0, 0
+    result = []
+
+    # Traverse both arrays and merge them
+    while i < len(arr1) and j < len(arr2):
+        if arr1[i] < arr2[j]:
+            result.append(arr1[i])
+            i += 1
+        else:
+            result.append(arr2[j])
+            j += 1
+
+    # Append remaining elements of arr1, if any
+    result.extend(arr1[i:])
+    # Append remaining elements of arr2, if any
+    result.extend(arr2[j:])
+
+    return result
+
+# Example usage:
+arr1 = [1, 3, 5, 7]
+arr2 = [2, 4, 6, 8]
+merged_array = merge_sorted_arrays(arr1, arr2)
+print(merged_array)  # Output: [1, 2, 3, 4, 5, 6, 7, 8]"
+P16_S1,P16,Check balanced parentheses,qwen2.5-coder:3b,1,"def is_balanced_parentheses(s: str) -> bool:
+    # Initialize a counter to keep track of the balance of parentheses
+    balance = 0
+    
+    # Iterate through each character in the string
+    for char in s:
+        # If the character is an opening parenthesis, increment the balance
+        if char == '(':
+            balance += 1
+        # If the character is a closing parenthesis, decrement the balance
+        elif char == ')':
+            balance -= 1
+        
+        # If the balance goes negative, it means there's a closing parenthesis without a matching opening one
+        if balance < 0:
+            return False
+    
+    # If the balance is zero, all parentheses are matched; otherwise, they are not
+    return balance == 0"
+P16_S2,P16,Check balanced parentheses,qwen2.5-coder:3b,2,"def is_balanced_parentheses(s: str) -> bool:
+    stack = []
+    for char in s:
+        if char == '(':
+            stack.append(char)
+        elif char == ')':
+            if not stack:
+                return False
+            stack.pop()
+    return len(stack) == 0
+
+# Edge cases
+print(is_balanced_parentheses(""()""))  # True
+print(is_balanced_parentheses(""(()())""))  # True
+print(is_balanced_parentheses("")(""))  # False
+print(is_balanced_parentheses(""(()""))  # False
+print(is_balanced_parentheses("")()""))  # False
+print(is_balanced_parentheses(""""))  # True
+print(is_balanced_parentheses(""(()))((())""))  # True"
+P16_S3,P16,Check balanced parentheses,qwen2.5-coder:3b,3,"def is_balanced_parentheses(s: str) -> bool:
+    # Initialize an empty stack
+    stack = []
+    
+    # Define the matching pairs of parentheses
+    matching_parentheses = {') : '(', '}': '{', ']': '['}
+    
+    # Iterate over each character in the string
+    for char in s:
+        # If the character is an opening parenthesis, push it onto the stack
+        if char in matching_parentheses.values():
+            stack.append(char)
+        # If the character is a closing parenthesis
+        elif char in matching_parentheses:
+            # Check if the stack is empty or the top of the stack doesn't match the current closing parenthesis
+            if not stack or stack[-1] != matching_parentheses[char]:
+                return False
+            # If it matches, pop the top of the stack
+            stack.pop()
+    
+    # If the stack is empty, all parentheses were matched correctly
+    return not stack
+
+# Test cases
+print(is_balanced_parentheses(""()""))          # True
+print(is_balanced_parentheses(""(())""))       # True
+print(is_balanced_parentheses(""(()))""))      # False
+print(is_balanced_parentheses(""((()))""))     # True
+print(is_balanced_parentheses(""(()()""))      # True
+print(is_balanced_parentheses("")(""))          # False
+print(is_balanced_parentheses(""(((((((((()))))))))""))  # True
+print(is_balanced_parentheses(""(((((((((()))))))))))("")) # False"
+P17_S1,P17,Find the second largest element,qwen2.5-coder:3b,1,"def find_second_largest(numbers):
+    if len(numbers) < 2:
+        return None  # Not enough elements to determine the second largest
+
+    # Initialize variables to store the first and second largest
+    first_largest = second_largest = float('-inf')
+
+    for num in numbers:
+        if num > first_largest:
+            second_largest = first_largest
+            first_largest = num
+        elif first_largest > num > second_largest:
+            second_largest = num
+
+    return second_largest
+
+# Example usage:
+numbers = [3, 1, 4, 4, 5, 5, 2]
+result = find_second_largest(numbers)
+if result is not None:
+    print(""The second largest element is:"", result)
+else:
+    print(""The list does not contain enough elements to find the second largest."")"
+P17_S2,P17,Find the second largest element,qwen2.5-coder:3b,2,"def find_second_largest(nums):
+    if len(nums) < 2:
+        return None  # Not enough elements to determine a second largest
+
+    first, second = None, None
+
+    for num in nums:
+        if first is None or num > first:
+            second = first
+            first = num
+        elif num < first and (second is None or num > second):
+            second = num
+
+    return second
+
+# Example usage:
+print(find_second_largest([3, 1, 4, 4, 5]))  # Output: 4
+print(find_second_largest([10]))          # Output: None
+print(find_second_largest([]))            # Output: None
+print(find_second_largest([5, 5, 5, 5]))   # Output: None"
+P17_S3,P17,Find the second largest element,qwen2.5-coder:3b,3,"def find_second_largest(lst):
+    # Convert the list to a set to remove duplicates
+    unique_numbers = set(lst)
+    
+    # If there are less than 2 unique numbers, return None
+    if len(unique_numbers) < 2:
+        return None
+    
+    # Convert the set back to a sorted list
+    sorted_numbers = sorted(unique_numbers)
+    
+    # Return the second last element in the sorted list
+    return sorted_numbers[-2]
+
+# Example usage:
+numbers = [3, 1, 4, 4, 5, 6, 6, 7, 7, 8]
+second_largest = find_second_largest(numbers)
+print(""The second largest element is:"", second_largest)"
+P18_S1,P18,Count word frequency,qwen2.5-coder:3b,1,"def count_word_frequency(text):
+    # Convert the text to lowercase to ensure case-insensitive counting
+    text = text.lower()
+    
+    # Remove punctuation using str.translate and str.maketrans
+    import string
+    translator = str.maketrans('', '', string.punctuation)
+    text = text.translate(translator)
+    
+    # Split the text into words
+    words = text.split()
+    
+    # Create a dictionary to store word frequencies
+    frequency_dict = {}
+    
+    # Count the frequency of each word
+    for word in words:
+        if word in frequency_dict:
+            frequency_dict[word] += 1
+        else:
+            frequency_dict[word] = 1
+    
+    return frequency_dict
+
+# Example usage
+text = ""Hello, world! Hello, Python. Python, Python.""
+print(count_word_frequency(text))"
+P18_S2,P18,Count word frequency,qwen2.5-coder:3b,2,"from collections import Counter
+
+def word_frequency(text):
+    """"""
+    Count the frequency of each word in a given text.
+
+    Args:
+    text (str): The input text.
+
+    Returns:
+    dict: A dictionary where keys are words and values are their frequencies.
+
+    Examples:
+    >>> word_frequency('hello world hello')
+    {'hello': 2, 'world': 1}
+    >>> word_frequency('one two three two one')
+    {'one': 2, 'two': 2, 'three': 1}
+    >>> word_frequency('')
+    {}
+    >>> word_frequency('a a a')
+    {'a': 3}
+    """"""
+    # Normalize text to lowercase to ensure case-insensitivity
+    text = text.lower()
+    # Split the text into words
+    words = text.split()
+    # Count the frequency of each word
+    frequency = Counter(words)
+    return dict(frequency)
+
+# Check function to verify the correctness of the solution
+def check_word_frequency():
+    assert word_frequency('hello world hello') == {'hello': 2, 'world': 1}
+    assert word_frequency('one two three two one') == {'one': 2, 'two': 2, 'three': 1}
+    assert word_frequency('') == {}
+    assert word_frequency('a a a') == {'a': 3}
+    print(""All tests passed!"")
+
+# Run the check function
+check_word_frequency()"
+P18_S3,P18,Count word frequency,qwen2.5-coder:3b,3,"from collections import Counter
+import re
+
+def count_word_frequency(text):
+    # Normalize text by converting to lowercase and removing non-alphabetic characters
+    cleaned_text = re.sub(r'[^a-z\s]', '', text.lower())
+    
+    # Split text into words
+    words = cleaned_text.split()
+    
+    # Count frequency of each word
+    word_count = Counter(words)
+    
+    # Return the word counts as a dictionary
+    return dict(word_count)
+
+# Example usage
+text = ""This is a test. This test is only a test.""
+print(count_word_frequency(text))"
+P19_S1,P19,Multiply two matrices,qwen2.5-coder:3b,1,"def matrix_multiply(A, B):
+    # Check if the number of columns in A is equal to the number of rows in B
+    if len(A[0]) != len(B):
+        raise ValueError(""Number of columns in A must be equal to the number of rows in B"")
+
+    # Initialize the result matrix with zeros
+    result = [[0 for _ in range(len(B[0]))] for _ in range(len(A))]
+
+    # Perform matrix multiplication
+    for i in range(len(A)):
+        for j in range(len(B[0])):
+            for k in range(len(B)):
+                result[i][j] += A[i][k] * B[k][j]
+
+    return result
+
+# Example usage:
+A = [
+    [1, 2, 3],
+    [4, 5, 6]
+]
+
+B = [
+    [7, 8],
+    [9, 10],
+    [11, 12]
+]
+
+try:
+    result = matrix_multiply(A, B)
+    print(""Result of matrix multiplication:"")
+    for row in result:
+        print(row)
+except ValueError as e:
+    print(e)"
+P19_S2,P19,Multiply two matrices,qwen2.5-coder:3b,2,"def multiply_matrices(A, B):
+    # Check if the matrices can be multiplied
+    if len(A[0]) != len(B):
+        raise ValueError(""Cannot multiply matrices: Number of columns in A must be equal to number of rows in B"")
+    
+    # Initialize the result matrix with zeros
+    result = [[0 for _ in range(len(B[0]))] for _ in range(len(A))]
+    
+    # Perform matrix multiplication
+    for i in range(len(A)):
+        for j in range(len(B[0])):
+            for k in range(len(B)):
+                result[i][j] += A[i][k] * B[k][j]
+    
+    return result
+
+# Example usage:
+A = [
+    [1, 2, 3],
+    [4, 5, 6]
+]
+
+B = [
+    [7, 8],
+    [9, 10],
+    [11, 12]
+]
+
+C = multiply_matrices(A, B)
+print(C)"
+P19_S3,P19,Multiply two matrices,qwen2.5-coder:3b,3,"def matrix_multiply(A, B):
+    # Check if the matrices are compatible for multiplication
+    if len(A[0]) != len(B):
+        raise ValueError(""Number of columns in A must be equal to number of rows in B"")
+    
+    # Initialize the result matrix with zeros
+    result = [[0 for _ in range(len(B[0]))] for _ in range(len(A))]
+    
+    # Iterate over the rows of A
+    for i in range(len(A)):
+        # Iterate over the columns of B
+        for j in range(len(B[0])):
+            # Compute the dot product of row i of A and column j of B
+            for k in range(len(B)):
+                result[i][j] += A[i][k] * B[k][j]
+    
+    return result
+
+# Example usage
+A = [[1, 2, 3], [4, 5, 6]]
+B = [[7, 8], [9, 10], [11, 12]]
+
+try:
+    result = matrix_multiply(A, B)
+    print(result)
+except ValueError as e:
+    print(e)"
+P20_S1,P20,Validate password strength,qwen2.5-coder:3b,1,"def validate_password_strength(password: str) -> bool:
+    # Check if the password is at least 8 characters long
+    if len(password) < 8:
+        return False
+    
+    # Check for at least one uppercase letter
+    if not any(char.isupper() for char in password):
+        return False
+    
+    # Check for at least one lowercase letter
+    if not any(char.islower() for char in password):
+        return False
+    
+    # Check for at least one digit
+    if not any(char.isdigit() for char in password):
+        return False
+    
+    # Check for at least one special character
+    if not any(char in ""!@#$%^&*()-_=+[]{}|;:,.<>?/`~"" for char in password):
+        return False
+    
+    return True
+
+# Example usage:
+print(validate_password_strength(""Password123!""))  # True
+print(validate_password_strength(""weakpass""))     # False"
+P20_S2,P20,Validate password strength,qwen2.5-coder:3b,2,"import re
+
+def is_valid_password(password):
+    """"""
+    Validates a password based on specific criteria.
+    
+    A valid password must meet the following conditions:
+    - At least 8 characters long
+    - Contains at least one uppercase letter
+    - Contains at least one lowercase letter
+    - Contains at least one digit
+    - Contains at least one special character from the set: @#$%^&*()
+    - Does not contain any whitespace
+    
+    Parameters:
+    password (str): The password to validate.
+    
+    Returns:
+    bool: True if the password is valid, False otherwise.
+    """"""
+    if len(password) < 8:
+        return False
+    
+    if not re.search(r""[A-Z]"", password):
+        return False
+    
+    if not re.search(r""[a-z]"", password):
+        return False
+    
+    if not re.search(r""\d"", password):
+        return False
+    
+    if not re.search(r""[@#$%^&*()]"", password):
+        return False
+    
+    if re.search(r""\s"", password):
+        return False
+    
+    return True
+
+# Example usage
+print(is_valid_password(""Password123!""))  # True
+print(is_valid_password(""pass""))          # False
+print(is_valid_password(""12345678""))      # False
+print(is_valid_password(""Password@""))     # False
+print(is_valid_password(""Password123 ""))    # False"
+P20_S3,P20,Validate password strength,qwen2.5-coder:3b,3,"import re
+
+def validate_password(password):
+    # Check if the password meets the minimum length requirement
+    if len(password) < 8:
+        return ""Password is too short. It should be at least 8 characters long.""
+    
+    # Check if the password contains at least one uppercase letter
+    if not re.search(r'[A-Z]', password):
+        return ""Password must contain at least one uppercase letter.""
+    
+    # Check if the password contains at least one lowercase letter
+    if not re.search(r'[a-z]', password):
+        return ""Password must contain at least one lowercase letter.""
+    
+    # Check if the password contains at least one digit
+    if not re.search(r'\d', password):
+        return ""Password must contain at least one digit.""
+    
+    # Check if the password contains at least one special character
+    if not re.search(r'[!@#$%^&*(),.?"":{}|<>]', password):
+        return ""Password must contain at least one special character.""
+    
+    # If all checks pass, the password is strong
+    return ""Password is strong.""
+
+# Example usage
+password = input(""Enter your password to validate: "")
+result = validate_password(password)
+print(result)"

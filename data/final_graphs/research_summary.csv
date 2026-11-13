@@ -1,0 +1,7 @@
+Experiment,Result
+Human Preference Alignment,44.14% (human majority)
+Controlled Position Sensitivity,87.59% preference changes
+Verbosity Score Difference,-0.30 points
+Self-Enhancement Score Difference,+0.038 points for Llama
+Qwen Functional Test Pass Rate,93.87%
+Llama Functional Test Pass Rate,98.85%

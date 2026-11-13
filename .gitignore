@@ -1,0 +1,27 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+.pytest_cache/
+.mypy_cache/
+.DS_Store
+Thumbs.db
+
+# Additional local environments
+.dashboard-venv/
+
+# External benchmark source data
+data/external_human_dataset/human-preference-alignment.jsonl.gz
+data/external_human_dataset/cleaned_human_preferences.csv
+
+# Local live evaluation records
+data/live_evaluations/evaluations.jsonl
+
+# Editor settings
+.vscode/
+
+data/external_human_dataset/

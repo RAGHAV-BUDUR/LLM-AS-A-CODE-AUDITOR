@@ -1,0 +1,600 @@
+﻿submission_id,problem_id,category,problem_description,model,code,status
+P01_LLAMA,P01,Basic Logic,Check whether a number is prime,llama3.2:3b,"def is_prime(n):
+    if not isinstance(n, int) or n < 2:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True",SUCCESS
+P02_LLAMA,P02,Basic Logic,Reverse a string,llama3.2:3b,"def reverse_string(input_string):
+    """"""
+    Reverses a given string.
+
+    Args:
+        input_string (str): The string to be reversed.
+
+    Returns:
+        str: The reversed string.
+
+    Raises:
+        TypeError: If the input is not a string.
+    """"""
+    if not isinstance(input_string, str):
+        raise TypeError(""Input must be a string."")
+
+    return input_string[::-1]
+
+# Example usage:
+print(reverse_string(""Hello, World!""))  # Output: ""!dlroW ,olleH""",SUCCESS
+P03_LLAMA,P03,Basic Logic,Calculate factorial of a number,llama3.2:3b,"def calculate_factorial(n):
+    """"""
+    Calculate the factorial of a given number.
+
+    Args:
+        n (int): The number to calculate the factorial of.
+
+    Returns:
+        int: The factorial of the given number.
+
+    Raises:
+        ValueError: If the input number is negative.
+        TypeError: If the input is not an integer.
+    """"""
+    if not isinstance(n, int):
+        raise TypeError(""Input must be an integer."")
+    if n < 0:
+        raise ValueError(""Input number cannot be negative."")
+    elif n == 0 or n == 1:
+        return 1
+    else:
+        result = 1
+        for i in range(2, n + 1):
+            result *= i
+        return result
+
+# Example usage:
+print(calculate_factorial(5))  # Output: 120
+print(calculate_factorial(0))  # Output: 1
+print(calculate_factorial(-1))  # Raises ValueError
+print(calculate_factorial(3.5))  # Raises TypeError",SUCCESS
+P04_LLAMA,P04,Basic Logic,Check whether a string is palindrome,llama3.2:3b,"def is_palindrome(s: str) -> bool:
+    """"""
+    Checks whether a given string is a palindrome.
+
+    Args:
+    s (str): The input string to check.
+
+    Returns:
+    bool: True if the string is a palindrome, False otherwise.
+    """"""
+    # Remove non-alphanumeric characters and convert to lowercase
+    cleaned_s = ''.join(char for char in s if char.isalnum()).lower()
+    
+    # Compare the cleaned string with its reverse
+    return cleaned_s == cleaned_s[::-1]",SUCCESS
+P05_LLAMA,P05,Sorting,Sort a list of integers,llama3.2:3b,"def sort_list_of_integers(input_list):
+    """"""
+    Sorts a list of integers in ascending order.
+
+    Args:
+        input_list (list): A list of integers.
+
+    Returns:
+        list: A sorted list of integers.
+
+    Raises:
+        TypeError: If the input is not a list.
+        ValueError: If the list contains non-integer values.
+    """"""
+
+    # Check if input is a list
+    if not isinstance(input_list, list):
+        raise TypeError(""Input must be a list."")
+
+    # Check if list is not empty
+    if len(input_list) == 0:
+        return input_list
+
+    # Check if all elements in the list are integers
+    if not all(isinstance(num, int) for num in input_list):
+        raise ValueError(""List must contain only integers."")
+
+    # Use built-in sorted function to sort the list
+    sorted_list = sorted(input_list)
+
+    return sorted_list
+
+
+# Example usage:
+numbers = [64, 34, 25, 12, 22, 11, 90]
+sorted_numbers = sort_list_of_integers(numbers)
+print(sorted_numbers)",SUCCESS
+P06_LLAMA,P06,Arrays,Find the largest element in an array,llama3.2:3b,"def find_largest_element(array):
+    """"""
+    Find the largest element in an array.
+
+    Args:
+        array (list): A list of numbers.
+
+    Returns:
+        The largest element in the array, or None if the array is empty.
+
+    Raises:
+        ValueError: If the input array is not a list.
+    """"""
+    if not isinstance(array, list):
+        raise ValueError(""Input must be a list"")
+
+    if len(array) == 0:
+        return None
+
+    largest = array[0]
+    for num in array[1:]:
+        if num > largest:
+            largest = num
+
+    return largest",SUCCESS
+P07_LLAMA,P07,Arrays,Find duplicate elements in an array,llama3.2:3b,"def find_duplicates(array):
+    """"""
+    Finds duplicate elements in an array.
+
+    Args:
+        array (list): The input array.
+
+    Returns:
+        list: A list of duplicate elements.
+    """"""
+    # Create an empty dictionary to store the count of each element
+    count_dict = {}
+
+    # Iterate over the array to count the occurrence of each element
+    for num in array:
+        if num in count_dict:
+            # If the element is already in the dictionary, increment its count
+            count_dict[num] += 1
+        else:
+            # If the element is not in the dictionary, add it with a count of 1
+            count_dict[num] = 1
+
+    # Create an empty list to store the duplicate elements
+    duplicates = []
+
+    # Iterate over the dictionary to find the duplicate elements
+    for num, count in count_dict.items():
+        if count > 1:
+            # If the count is greater than 1, add the element to the duplicates list
+            duplicates.append(num)
+
+    # Return the list of duplicate elements
+    return duplicates
+
+
+# Example usage:
+array = [1, 2, 3, 2, 4, 5, 6, 2, 3]
+print(find_duplicates(array))  # Output: [2, 3]",SUCCESS
+P08_LLAMA,P08,Searching,Implement binary search,llama3.2:3b,"def binary_search(arr, target):
+    """"""
+    Searches for a target element in a sorted array using binary search.
+
+    Args:
+        arr (list): A sorted list of elements.
+        target: The element to be searched.
+
+    Returns:
+        int: The index of the target element if found, -1 otherwise.
+    """"""
+    low = 0
+    high = len(arr) - 1
+
+    while low <= high:
+        mid = (low + high) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+
+    return -1
+
+# Example usage:
+arr = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+target = 23
+result = binary_search(arr, target)
+
+if result != -1:
+    print(f""Target {target} found at index {result}."")
+else:
+    print(f""Target {target} not found in the array."")",SUCCESS
+P09_LLAMA,P09,Searching,Implement linear search,llama3.2:3b,"def linear_search(arr, target):
+    """"""
+    Searches for a target element in a sorted array using linear search.
+
+    Args:
+        arr (list): A sorted list of elements.
+        target: The element to be searched.
+
+    Returns:
+        int: The index of the target element if found, -1 otherwise.
+    """"""
+    for i in range(len(arr)):
+        if arr[i] == target:
+            return i
+    return -1
+
+# Example usage:
+arr = [1, 2, 3, 4, 5]
+target = 3
+result = linear_search(arr, target)
+
+if result != -1:
+    print(f""Target {target} found at index {result}."")
+else:
+    print(f""Target {target} not found in the array."")",SUCCESS
+P10_LLAMA,P10,Basic Logic,Generate Fibonacci series,llama3.2:3b,"def generate_fibonacci(n):
+    """"""
+    Generate Fibonacci series up to the nth number.
+
+    Args:
+        n (int): The number of Fibonacci numbers to generate.
+
+    Returns:
+        list: A list of Fibonacci numbers up to the nth number.
+    """"""
+    if not isinstance(n, int) or n < 0:
+        raise ValueError(""Input must be a non-negative integer."")
+
+    if n == 0:
+        return []
+
+    elif n == 1:
+        return [0]
+
+    elif n == 2:
+        return [0, 1]
+
+    else:
+        fib_series = [0, 1]
+        while len(fib_series) < n:
+            fib_series.append(fib_series[-1] + fib_series[-2])
+        return fib_series
+
+
+# Example usage:
+n = 10
+print(generate_fibonacci(n))",SUCCESS
+P11_LLAMA,P11,String,Count vowels in a string,llama3.2:3b,"def count_vowels(input_string):
+    """"""
+    Counts the number of vowels in a given string.
+
+    Args:
+        input_string (str): The input string to count vowels from.
+
+    Returns:
+        int: The number of vowels in the input string.
+    """"""
+    # Define the set of vowels
+    vowels = set('aeiouAEIOU')
+
+    # Initialize a counter for vowels
+    vowel_count = 0
+
+    # Iterate over each character in the input string
+    for char in input_string:
+        # Check if the character is a vowel
+        if char in vowels:
+            # Increment the vowel count
+            vowel_count += 1
+
+    # Return the total vowel count
+    return vowel_count
+
+# Example usage:
+input_str = ""Hello World""
+vowel_count = count_vowels(input_str)
+print(f""The string '{input_str}' contains {vowel_count} vowels."")",SUCCESS
+P12_LLAMA,P12,String,Check whether two strings are anagrams,llama3.2:3b,"def are_anagrams(str1, str2):
+    """"""
+    Checks whether two strings are anagrams.
+
+    Args:
+        str1 (str): The first string.
+        str2 (str): The second string.
+
+    Returns:
+        bool: True if the strings are anagrams, False otherwise.
+    """"""
+    # Remove any whitespace and convert to lowercase
+    str1 = str1.replace("" "", """").lower()
+    str2 = str2.replace("" "", """").lower()
+
+    # If the lengths of the strings are not equal, they cannot be anagrams
+    if len(str1) != len(str2):
+        return False
+
+    # Sort the characters in each string and compare
+    return sorted(str1) == sorted(str2)
+
+
+# Example usage:
+print(are_anagrams(""Listen"", ""Silent""))  # Returns: True
+print(are_anagrams(""Hello"", ""World""))  # Returns: False",SUCCESS
+P13_LLAMA,P13,Basic Logic,Find GCD of two numbers,llama3.2:3b,"import math
+
+def find_gcd(num1, num2):
+    """"""
+    This function calculates the greatest common divisor (GCD) of two numbers.
+
+    Args:
+        num1 (int): The first number.
+        num2 (int): The second number.
+
+    Returns:
+        int: The GCD of num1 and num2.
+
+    Raises:
+        TypeError: If either num1 or num2 is not an integer.
+        ValueError: If either num1 or num2 is less than 0.
+    """"""
+    if not isinstance(num1, int) or not isinstance(num2, int):
+        raise TypeError(""Both numbers must be integers."")
+    if num1 < 0 or num2 < 0:
+        raise ValueError(""Both numbers must be non-negative."")
+
+    # Use the built-in math.gcd function for efficiency
+    return math.gcd(num1, num2)
+
+# Example usage:
+print(find_gcd(48, 18))  # Output: 6
+print(find_gcd(101, 103))  # Output: 1",SUCCESS
+P14_LLAMA,P14,Arrays,Remove duplicates from a list,llama3.2:3b,"def remove_duplicates(input_list):
+    """"""
+    Removes duplicates from a list while preserving the original order.
+
+    Args:
+        input_list (list): The list to remove duplicates from.
+
+    Returns:
+        list: The list with duplicates removed.
+    """"""
+    seen = set()
+    output_list = []
+
+    for element in input_list:
+        if element not in seen:
+            seen.add(element)
+            output_list.append(element)
+
+    return output_list
+
+
+# Example usage:
+input_list = [1, 2, 2, 3, 4, 4, 5, 6, 6, 7]
+print(remove_duplicates(input_list))  # Output: [1, 2, 3, 4, 5, 6, 7]
+
+# Edge case: Empty list
+print(remove_duplicates([]))  # Output: []
+
+# Edge case: List with a single element
+print(remove_duplicates([1]))  # Output: [1]
+
+# Edge case: List with no duplicates
+print(remove_duplicates([1, 2, 3, 4, 5]))  # Output: [1, 2, 3, 4, 5]",SUCCESS
+P15_LLAMA,P15,Arrays,Merge two sorted arrays,llama3.2:3b,"def merge_sorted_arrays(arr1, arr2):
+    """"""
+    Merge two sorted arrays into a single sorted array.
+
+    Args:
+        arr1 (list): The first sorted array.
+        arr2 (list): The second sorted array.
+
+    Returns:
+        list: A new sorted array containing all elements from arr1 and arr2.
+    """"""
+    # Initialize the result array
+    result = []
+    
+    # Initialize pointers for both arrays
+    i, j = 0, 0
+    
+    # Merge smaller elements first
+    while i < len(arr1) and j < len(arr2):
+        if arr1[i] < arr2[j]:
+            result.append(arr1[i])
+            i += 1
+        else:
+            result.append(arr2[j])
+            j += 1
+    
+    # Append any remaining elements from arr1
+    while i < len(arr1):
+        result.append(arr1[i])
+        i += 1
+    
+    # Append any remaining elements from arr2
+    while j < len(arr2):
+        result.append(arr2[j])
+        j += 1
+    
+    return result
+
+# Example usage:
+arr1 = [1, 3, 5]
+arr2 = [2, 4, 6]
+print(merge_sorted_arrays(arr1, arr2))  # Output: [1, 2, 3, 4, 5, 6]
+
+arr1 = [1, 2, 3]
+arr2 = []
+print(merge_sorted_arrays(arr1, arr2))  # Output: [1, 2, 3]
+
+arr1 = []
+arr2 = [1, 2, 3]
+print(merge_sorted_arrays(arr1, arr2))  # Output: [1, 2, 3]
+
+arr1 = [1, 2, 3]
+arr2 = [1, 2, 3]
+print(merge_sorted_arrays(arr1, arr2))  # Output: [1, 1, 2, 2, 3, 3]",SUCCESS
+P16_LLAMA,P16,Stack,Check balanced parentheses,llama3.2:3b,"def is_balanced(s):
+    stack = []
+    mapping = {"")"": ""("", ""}"": ""{"", ""]"": ""[""}
+
+    for char in s:
+        if char in mapping.values():
+            stack.append(char)
+        elif char in mapping.keys():
+            if not stack or mapping[char] != stack.pop():
+                return False
+
+    return not stack
+
+
+# Test cases
+print(is_balanced(""((()))""))  # True
+print(is_balanced(""(()""))  # False
+print(is_balanced(""({[]})""))  # True
+print(is_balanced(""({[})""))  # False",SUCCESS
+P17_LLAMA,P17,Arrays,Find the second largest element,llama3.2:3b,"def find_second_largest(numbers):
+    """"""
+    Find the second largest element in a list of numbers.
+
+    Args:
+        numbers (list): A list of numbers.
+
+    Returns:
+        int or None: The second largest element if it exists, otherwise None.
+
+    Raises:
+        ValueError: If the input list has less than two elements.
+    """"""
+    if len(numbers) < 2:
+        raise ValueError(""Input list must have at least two elements"")
+
+    max_num = second_max = float('-inf')
+    for num in numbers:
+        if num > max_num:
+            second_max = max_num
+            max_num = num
+        elif num > second_max and num != max_num:
+            second_max = num
+
+    return second_max if second_max != float('-inf') else None",SUCCESS
+P18_LLAMA,P18,String,Count word frequency,llama3.2:3b,"def count_word_frequency(text):
+    """"""
+    Counts the frequency of each word in a given text.
+
+    Args:
+        text (str): The input text.
+
+    Returns:
+        dict: A dictionary where keys are words and values are their frequencies.
+    """"""
+    # Convert the text to lower case and split it into words
+    words = text.lower().split()
+
+    # Remove punctuation from each word
+    words = [''.join(e for e in word if e.isalnum()) for word in words]
+
+    # Remove empty strings
+    words = [word for word in words if word]
+
+    # Count the frequency of each word
+    frequency = {}
+    for word in words:
+        frequency[word] = frequency.get(word, 0) + 1
+
+    return frequency
+
+# Example usage:
+text = ""This is a test. This test is only a test. If this were a real emergency, you would be instructed to panic.""
+print(count_word_frequency(text))",SUCCESS
+P19_LLAMA,P19,Matrix,Multiply two matrices,llama3.2:3b,"import numpy as np
+
+def multiply_matrices(matrix1, matrix2):
+    """"""
+    Multiply two matrices.
+
+    Args:
+    matrix1 (list of lists): The first matrix.
+    matrix2 (list of lists): The second matrix.
+
+    Returns:
+    list of lists: The product of the two matrices.
+
+    Raises:
+    ValueError: If the number of columns in the first matrix does not match the number of rows in the second matrix.
+    """"""
+
+    # Check if the input matrices are valid
+    if not isinstance(matrix1, list) or not isinstance(matrix2, list):
+        raise ValueError(""Both inputs must be lists"")
+    if not all(isinstance(row, list) for row in matrix1) or not all(isinstance(row, list) for row in matrix2):
+        raise ValueError(""Both inputs must be lists of lists"")
+    if not all(len(row) == len(matrix1[0]) for row in matrix1) or not all(len(row) == len(matrix2[0]) for row in matrix2):
+        raise ValueError(""All rows must have the same number of columns"")
+
+    # Convert the input lists to NumPy arrays
+    matrix1 = np.array(matrix1)
+    matrix2 = np.array(matrix2)
+
+    # Check if the number of columns in the first matrix matches the number of rows in the second matrix
+    if matrix1.shape[1] != matrix2.shape[0]:
+        raise ValueError(""The number of columns in the first matrix must match the number of rows in the second matrix"")
+
+    # Multiply the matrices using NumPy's matmul function
+    result = np.matmul(matrix1, matrix2)
+
+    # Convert the result back to a list of lists
+    result = result.tolist()
+
+    return result
+
+# Example usage:
+matrix1 = [[1, 2], [3, 4]]
+matrix2 = [[5, 6], [7, 8]]
+print(multiply_matrices(matrix1, matrix2))",SUCCESS
+P20_LLAMA,P20,Security,Validate password strength,llama3.2:3b,"import re
+
+def validate_password_strength(password):
+    """"""
+    Validate password strength.
+
+    Args:
+    password (str): The password to validate.
+
+    Returns:
+    bool: True if the password is strong, False otherwise.
+    """"""
+
+    # Check if password is None or empty
+    if not password:
+        return False
+
+    # Check if password length is between 8 and 32 characters
+    if not 8 <= len(password) <= 32:
+        return False
+
+    # Check if password contains at least one uppercase letter
+    if not re.search(r""[A-Z]"", password):
+        return False
+
+    # Check if password contains at least one lowercase letter
+    if not re.search(r""[a-z]"", password):
+        return False
+
+    # Check if password contains at least one digit
+    if not re.search(r""\d"", password):
+        return False
+
+    # Check if password contains at least one special character
+    if not re.search(r""[!@#$%^&*()_+=-{};:'<>,./?]"", password):
+        return False
+
+    # If all checks pass, the password is strong
+    return True
+
+# Example usage:
+password = ""StrongP@ssw0rd""
+print(validate_password_strength(password))  # Output: True
+
+password = ""weak""
+print(validate_password_strength(password))  # Output: False",SUCCESS
