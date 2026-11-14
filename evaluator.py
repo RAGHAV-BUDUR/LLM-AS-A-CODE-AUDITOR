@@ -44,17 +44,29 @@ FIELDS = [
 ]
 
 
+def extract_python_code(text: str) -> str:
+    """Extract code from markdown code fences if present; otherwise return stripped text."""
+    if not text:
+        return ""
+    clean = text.strip()
+    match = re.search(r"```(?:python)?\s*\n?(.*?)\n?```", clean, re.DOTALL | re.IGNORECASE)
+    if match:
+        return match.group(1).strip()
+    return clean
+
+
 def validate_python_code(code: str) -> tuple[bool, str]:
     """Validate that the submitted snippet is strictly valid, non-trivial Python code.
 
     Rejects C/C++, other non-Python languages, syntax errors, and empty/meaningless inputs.
+    Extracts code from markdown blocks if conversational markdown wrapper text is provided.
     Returns:
         (is_valid, error_message)
     """
     if not code or not code.strip():
         return False, "Code snippet is empty. Please submit a valid Python implementation."
 
-    clean = code.strip()
+    clean = extract_python_code(code)
 
     # 1. Explicit C / C++ pattern detection
     c_patterns = [
@@ -134,8 +146,11 @@ def evaluate_submission(
     """
     model = judge_model or DEFAULT_JUDGE_MODEL
 
+    # Extract clean python code if wrapped in markdown explanations
+    clean_code = extract_python_code(code)
+
     # Pre-validation for Python-only constraint
-    is_valid, validation_error = validate_python_code(code)
+    is_valid, validation_error = validate_python_code(clean_code)
     if not is_valid:
         if strict_raise:
             raise ValueError(validation_error)
@@ -193,7 +208,7 @@ PROBLEM:
 {problem}
 
 SUBMITTED PYTHON CODE:
-{code}
+{clean_code}
 
 Return this JSON structure:
 {{

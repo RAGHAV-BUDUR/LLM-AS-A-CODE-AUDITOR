@@ -65,6 +65,7 @@ class TestPythonCodeValidation(unittest.TestCase):
             "def calculate_grade(marks):\n    if marks >= 90: return 'A'\n    elif marks >= 80: return 'B'\n    return 'F'",
             "numbers = [1, 2, 3, 4, 5]\nsquares = [x**2 for x in numbers]\nprint(squares)",
             "class Student:\n    def __init__(self, name):\n        self.name = name",
+            "Certainly! Here is the solution:\n```python\ndef add(a, b):\n    return a + b\n```\nHope that helps!",
         ]
         for sample in valid_python:
             valid, msg = validate_python_code(sample)
@@ -95,3 +96,4 @@ class TestEvaluatorRejection(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

@@ -11,7 +11,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from evaluator import evaluate_submission, validate_python_code
+from evaluator import evaluate_submission, extract_python_code, validate_python_code
 
 DEFAULT_GENERATOR_MODEL = "qwen2.5-coder:3b"
 DEFAULT_JUDGE_MODEL = "llama3.2:3b"
@@ -112,9 +112,10 @@ def main():
             sys.exit(1)
         code_to_audit = args.code_file.read_text(encoding="utf-8")
     else:
-        code_to_audit = generate_code(problem, model=args.generator_model)
+        raw_generated = generate_code(problem, model=args.generator_model)
         print("\n========== GENERATED CODE ==========\n")
-        print(code_to_audit)
+        print(raw_generated)
+        code_to_audit = extract_python_code(raw_generated)
 
     # Validate Python code before auditing
     is_valid, validation_msg = validate_python_code(code_to_audit)
