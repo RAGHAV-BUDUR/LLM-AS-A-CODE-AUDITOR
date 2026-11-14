@@ -51,14 +51,17 @@ def evaluate_live(problem: str, code: str, model: str) -> dict:
     if not problem.strip() or not code.strip():
         raise ValueError("Enter both a task description and Python code.")
     sys.path.insert(0, str(ROOT))
-    from evaluator import evaluate_submission
+    from evaluator import evaluate_submission, validate_python_code
 
+    is_valid, validation_msg = validate_python_code(code)
     result, scores, overall = evaluate_submission(problem.strip(), code, model)
     record = {
         "created_at": datetime.now(timezone.utc).isoformat(),
         "judge_model": model,
         "problem": problem.strip(),
         "code": code,
+        "is_valid_python": is_valid,
+        "validation_message": validation_msg,
         **{key: {"score": scores[key], "explanation": result[key]["explanation"]}
            for key in DIMENSIONS},
         "overall_score": overall,

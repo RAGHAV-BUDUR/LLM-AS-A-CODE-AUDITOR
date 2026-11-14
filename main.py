@@ -1,150 +1,135 @@
+"""Main CLI interface for LLM-Based Automated Python Code Auditing.
 
-import ollama
-
-GENERATOR_MODEL = "qwen2.5-coder:3b"
-JUDGE_MODEL = "llama3.2:3b"
-
-
-def generate_code(problem):
-
-    print("\n[1] Generating code using Qwen...\n")
-
-    response = ollama.chat(
-        model=GENERATOR_MODEL,
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a Python programming assistant. Generate correct, simple Python code. Return the code and a short explanation."
-            },
-            {
-                "role": "user",
-                "content": problem
-            }
-        ],
-        keep_alive=0
-    )
-
-    return response["message"]["content"]
-
-
-import json
-import ollama
-
-
-def evaluate_code(problem, code):
-
-    print("\n[2] Evaluating code using Llama...\n")
-
-    prompt = f"""
-You are an expert Python code auditor.
-
-Evaluate the submitted code using these dimensions:
-
-1. Correctness: 1 to 10
-2. Security: 1 to 10
-3. Readability: 1 to 10
-4. Efficiency: 1 to 10
-
-Rules:
-- Evaluate only against the given problem requirements.
-- Do not penalize features that were not requested.
-- Explain every score.
-- Do not invent security vulnerabilities.
-- Return valid JSON only.
-- Scores must be integers between 1 and 10.
-
-PROBLEM:
-{problem}
-
-CODE:
-{code}
-
-Return this exact JSON structure:
-
-{{
-    "correctness": {{
-        "score": 0,
-        "explanation": ""
-    }},
-    "security": {{
-        "score": 0,
-        "explanation": ""
-    }},
-    "readability": {{
-        "score": 0,
-        "explanation": ""
-    }},
-    "efficiency": {{
-        "score": 0,
-        "explanation": ""
-    }}
-}}
+Supports interactive prompts as well as CLI arguments to specify problem,
+code file, generator model, and judge model.
+Strictly audits Python code and rejects non-Python (e.g. C/C++) submissions.
 """
 
-    response = ollama.chat(
-        model="llama3.2:3b",
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        format="json",
-        keep_alive=0
-    )
+from __future__ import annotations
 
-    result = json.loads(response["message"]["content"])
+import argparse
+import json
+import sys
+from pathlib import Path
+from evaluator import evaluate_submission, validate_python_code
 
-    dimensions = [
-        "correctness",
-        "security",
-        "readability",
-        "efficiency"
-    ]
+DEFAULT_GENERATOR_MODEL = "qwen2.5-coder:3b"
+DEFAULT_JUDGE_MODEL = "llama3.2:3b"
 
-    scores = []
 
-    for dimension in dimensions:
+def generate_code(problem: str, model: str = DEFAULT_GENERATOR_MODEL) -> str:
+    """Generate Python code using the specified generator model."""
+    print(f"\n[1] Generating Python code using {model}...\n")
+    try:
+        import ollama
+        response = ollama.chat(
+            model=model,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a Python programming assistant. Generate correct, simple, "
+                        "and well-structured Python code. Return executable Python code inside a "
+                        "```python code block."
+                    ),
+                },
+                {"role": "user", "content": problem},
+            ],
+            keep_alive=0,
+        )
+        content = response["message"]["content"]
+    except Exception as exc:
+        raise RuntimeError(f"Ollama generation failed with model '{model}': {exc}") from exc
 
-        score = result[dimension]["score"]
+    return content
 
-        if not isinstance(score, int) or not 1 <= score <= 10:
-            raise ValueError(f"Invalid score for {dimension}")
 
-        scores.append(score)
-
-    overall = sum(scores) / len(scores)
-
-    result["overall_score"] = round(overall, 2)
-
-    return json.dumps(result, indent=4)
-
+def evaluate_code(
+    problem: str, code: str, judge_model: str = DEFAULT_JUDGE_MODEL
+) -> tuple[dict, dict[str, int | float], float]:
+    """Audit submitted Python code using the specified judge model."""
+    print(f"\n[2] Evaluating code using {judge_model}...\n")
+    return evaluate_submission(problem, code, judge_model=judge_model)
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="LLM-Based Automated Python Code Auditor",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--problem",
+        "-p",
+        type=str,
+        help="Programming problem description to evaluate",
+    )
+    parser.add_argument(
+        "--code",
+        "-c",
+        type=str,
+        help="Python code string to audit directly (skips generation)",
+    )
+    parser.add_argument(
+        "--code-file",
+        "-f",
+        type=Path,
+        help="Path to file containing Python code to audit",
+    )
+    parser.add_argument(
+        "--generator-model",
+        type=str,
+        default=DEFAULT_GENERATOR_MODEL,
+        help="Model used for code generation",
+    )
+    parser.add_argument(
+        "--judge-model",
+        type=str,
+        default=DEFAULT_JUDGE_MODEL,
+        help="Model used as LLM-as-a-Judge",
+    )
 
-    print("=" * 55)
-    print("       LLM-BASED AUTOMATED CODE AUDITOR")
-    print("=" * 55)
+    args = parser.parse_args()
 
-    problem = input("\nEnter your programming problem: ")
+    print("=" * 60)
+    print("       LLM-BASED AUTOMATED PYTHON CODE AUDITOR")
+    print(f"       Generator: {args.generator_model} | Judge: {args.judge_model}")
+    print("=" * 60)
 
-    if not problem.strip():
-        print("Please enter a valid programming problem.")
-        return
+    problem = args.problem
+    if not problem:
+        problem = input("\nEnter your programming problem: ").strip()
 
-    # Generate code
-    generated_code = generate_code(problem)
+    if not problem:
+        print("Error: Problem description cannot be empty.")
+        sys.exit(1)
 
-    print("\n========== GENERATED CODE ==========\n")
-    print(generated_code)
+    code_to_audit = ""
+    if args.code:
+        code_to_audit = args.code
+    elif args.code_file:
+        if not args.code_file.is_file():
+            print(f"Error: File '{args.code_file}' does not exist.")
+            sys.exit(1)
+        code_to_audit = args.code_file.read_text(encoding="utf-8")
+    else:
+        code_to_audit = generate_code(problem, model=args.generator_model)
+        print("\n========== GENERATED CODE ==========\n")
+        print(code_to_audit)
+
+    # Validate Python code before auditing
+    is_valid, validation_msg = validate_python_code(code_to_audit)
+    if not is_valid:
+        print("\n[!] Python Language Validation Notice:")
+        print(f"    {validation_msg}")
 
     # Evaluate code
-    evaluation = evaluate_code(problem, generated_code)
+    result, scores, overall = evaluate_code(
+        problem, code_to_audit, judge_model=args.judge_model
+    )
 
     print("\n========== AI JUDGE EVALUATION ==========\n")
-    print(evaluation)
-
+    print(json.dumps(result, indent=2))
+    print(f"\nOverall Score: {overall}/10")
     print("\n========== AUDIT COMPLETED ==========")
 
 

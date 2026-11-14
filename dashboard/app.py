@@ -345,6 +345,11 @@ elif section == "Code evaluation":
                         selected_model,
                     )
 
+                    if not result.get("is_valid_python", True):
+                        st.warning(
+                            f"⚠️ **Python Enforcement Notice:** {result.get('validation_message')}"
+                        )
+
                     st.subheader("Evaluation scores")
 
                     score_cols = st.columns(5)
@@ -364,9 +369,14 @@ elif section == "Code evaluation":
                         ):
                             st.write(result[dim]["explanation"])
 
-                    st.success(
-                        f"Overall score: {result['overall_score']}/10"
-                    )
+                    if result["overall_score"] <= 2.0:
+                        st.error(
+                            f"Overall score: {result['overall_score']}/10 (Rejected / Low Confidence)"
+                        )
+                    else:
+                        st.success(
+                            f"Overall score: {result['overall_score']}/10"
+                        )
 
                     st.caption(
                         "Saved separately to "
