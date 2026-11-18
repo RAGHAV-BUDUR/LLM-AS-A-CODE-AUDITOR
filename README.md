@@ -1,4 +1,4 @@
-﻿# LLM-as-a-Code-Auditor: Evaluative Benchmarking of LLM-as-a-Judge
+# LLM-as-a-Code-Auditor: Evaluative Benchmarking of LLM-as-a-Judge
 
 A research project evaluating the use of Large Language Models (LLMs) as automated judges for Python code auditing.
 
