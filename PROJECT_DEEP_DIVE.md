@@ -76,7 +76,63 @@ flowchart TD
 
 ## 3. Comprehensive Repository Codebase Guide: What Each Python File Does
 
-Below is an exhaustive breakdown of every Python file in the repository, organized by functional subsystems.
+### Quick Summary of All Python Files by Subsystem
+
+* **1. Core Auditing Pipeline & CLI:**
+  * **`main.py`**: The primary user CLI. Parses `--problem`, `--code`, `--code-file`, `--generator-model`, `--judge-model`. Coordinates generation, markdown extraction, AST validation, and prints audit telemetry.
+  * **`evaluator.py`**: Point-wise evaluation engine. Houses `validate_python_code()`, `extract_python_code()`, and `evaluate_submission()`. Delivers structured JSON prompts to Ollama, asserts score boundaries $[1, 10]$, and handles batch CSV auditing.
+  * **`generator.py`**: Batch Qwen code generation engine. Prompts `qwen2.5-coder:3b` across 3 prompt variations for 20 benchmark tasks and outputs `data/submissions.csv`.
+  * **`generate_llama_submissions.py`**: Generates Python code for all 20 tasks using `llama3.2:3b` to allow cross-model self-enhancement benchmarking against Qwen.
+
+* **2. Interactive Web Dashboard (`dashboard/`):**
+  * **`dashboard/app.py`**: Full-stack Streamlit web app with 5 tabs (Project Overview, Live Code Evaluation with validation alerts, Functional Testing, Research Results, and Experiment Details).
+  * **`dashboard/services.py`**: Dashboard backend service executing sandboxed subprocess tests (`-I -S` flags with 3-second timeouts), dynamic Ollama model discovery, and JSONL logging.
+
+* **3. Functional Testing & Ground-Truth Verification:**
+  * **`benchmark_config.py`**: Defines `FUNCTION_MAP` (mapping problem IDs to acceptable function name variations) and benchmark normalization rules.
+  * **`test_cases.py`**: Ground-truth input/output test fixtures for all 20 problems (normal cases + boundary/edge cases).
+  * **`universal_test_runner.py`**: Automated batch test harness using AST dependency extraction to test Qwen-generated submissions in subprocesses.
+  * **`test_llama_submissions.py`**: Automated batch test harness verifying Llama-generated code against test fixtures.
+  * **`test_submissions.py`**: Baseline prototype testing script for Task P01 (primality).
+  * **`test_prime_fixed.py`**: Focused regression test harness for Task P01 handling boundary numbers.
+  * **`test_sorting_adapter.py`**: Test adapter reconciling in-place vs. return-value sorting algorithms (P05).
+  * **`test_parentheses_adapter.py`**: Test adapter for balanced parentheses verification (P16).
+  * **`test_password_adapter.py`**: Test adapter reconciling boolean vs. string password strength evaluations (P20).
+
+* **4. Empirical Bias Measurement:**
+  * **`pairwise_evaluator.py`**: Pairwise preference evaluator comparing candidate pairs against human consensus.
+  * **`controlled_position_bias.py`**: Measures order-reversal sensitivity (swapping A and B order at temperature 0) to detect position bias.
+  * **`position_bias_evaluator.py`**: Measures first-position selection rates on human datasets.
+  * **`controlled_verbosity_scoring.py`**: Tests whether comment-padded verbose code receives inflated scores over concise implementations.
+  * **`neutral_verbosity_scoring.py`**: Randomized, balanced order verbosity experiment runner.
+  * **`verbosity_bias_evaluator.py`**: Pairwise verbosity tournament judge selecting preferences between concise vs. verbose implementations.
+  * **`self_enhancement_evaluator.py`**: Pairwise evaluator measuring whether Llama preferentially picks Llama-generated solutions over Qwen-generated ones.
+  * **`self_enhancement_pointwise.py`**: Point-wise self-enhancement test comparing absolute dimension scores assigned by Llama to its own code vs. Qwen's code.
+
+* **5. Analysis, Inspection & Human Alignment:**
+  * **`analyze_all_dimensions.py`**: Statistical summary (mean, std, min, max) across the 4 audit dimensions.
+  * **`analyze_score_distribution.py`**: Computes score frequency distributions from evaluation runs.
+  * **`analyze_pairwise_results.py`**: Computes percentage agreement between LLM pairwise choices and human consensus.
+  * **`analyze_qwen_reliability.py`**: Calculates false-positive and false-negative audit rates against functional tests.
+  * **`analyze_self_enhancement.py`**: Analyzes statistical preference rates for self-authored code.
+  * **`compare_llm_vs_functional.py`**: Generates correlation matrices linking subjective LLM correctness scores to ground-truth pass rates.
+  * **`final_research_analysis.py`**: Master `matplotlib`/`seaborn` plotting script saving figures to `data/final_graphs/`.
+  * **`create_human_template.py`**: Creates standardized CSV templates (`data/human_annotations.csv`) for human grading.
+  * **`create_reviewer_files.py`**: Generates formatted multi-tab Excel review files with scoring rubrics for human teams.
+  * **`inspect_submissions.py`**: Preview tool displaying generated submission records.
+  * **`inspect_interfaces.py`**: AST scanner checking function names and signatures across generated code.
+  * **`inspect_failures.py`**: Diagnostic utility filtering submissions that failed functional tests.
+  * **`inspect_returns.py`**: Diagnostic utility inspecting runtime return types.
+  * **`inspect_external_dataset.py`**: Verifies structure and headers of external human benchmark data.
+  * **`check_p05_syntax.py` & `check_p16_syntax.py`**: AST integrity checkers for complex sorting and stack algorithms.
+
+* **6. Automated Unit Tests (`tests/`):**
+  * **`tests/__init__.py`**: Declares `tests/` as a Python test package.
+  * **`tests/test_validation.py`**: 7 unit tests verifying C/C++ rejection, empty/gibberish (`abcd`) interception, markdown code extraction, and deterministic 1/10 scoring.
+
+---
+
+### In-Depth Breakdown by Functional Subsystem
 
 ### 3.1 Core Auditing Pipeline & User Interfaces
 
