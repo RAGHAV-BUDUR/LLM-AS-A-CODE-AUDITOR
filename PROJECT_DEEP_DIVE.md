@@ -74,270 +74,146 @@ flowchart TD
 
 ---
 
-## 3. Detailed Component Deep-Dive & Code Snippets
+## 3. Comprehensive Repository Codebase Guide: What Each Python File Does
 
-### 3.1 Unit 1 & 2 Application: Role Prompting, Anatomy, and Structured JSON Output
+Below is an exhaustive breakdown of every Python file in the repository, organized by functional subsystems.
 
-In `evaluator.py`, the evaluation prompt implements **Role Prompting**, explicit **Rules**, and strict **Output Indicators**. 
+### 3.1 Core Auditing Pipeline & User Interfaces
 
-#### Code Implementation (`evaluator.py`):
-```python
-def evaluate_submission(
-    problem: str,
-    code: str,
-    judge_model: str | None = None,
-    strict_raise: bool = False,
-) -> tuple[dict, dict[str, int | float], float]:
-    model = judge_model or DEFAULT_JUDGE_MODEL
-
-    # Extract clean python code if wrapped in markdown explanations
-    clean_code = extract_python_code(code)
-
-    # Pre-validation for Python-only constraint
-    is_valid, validation_error = validate_python_code(clean_code)
-    if not is_valid:
-        # Deterministic scoring prevents model hallucination on invalid code
-        rejection_result = {
-            "correctness": {"score": 1, "explanation": f"REJECTED: {validation_error}"},
-            "security": {"score": 1, "explanation": "Security cannot be audited on invalid, non-executable, or non-Python code."},
-            "readability": {"score": 1, "explanation": "Code lacks valid Python syntax or recognizable structure."},
-            "efficiency": {"score": 1, "explanation": "Algorithmic efficiency cannot be assessed on non-Python or non-functional input."},
-        }
-        rejection_scores = {dim: 1 for dim in DIMENSIONS}
-        return rejection_result, rejection_scores, 1.0
-
-    prompt = f"""You are an expert, objective Python code auditor.
-
-Evaluate the submitted Python code across four core dimensions:
-
-1. Correctness (1 to 10):
-- Does the code strictly solve the problem requirements?
-- Score 1-3 if the solution fails requirements, has fatal logic/runtime errors, or is incomplete.
-- Score 4-7 if it works partially or misses critical edge cases.
-- Score 8-10 only if it completely and correctly satisfies the requirements.
-
-2. Security (1 to 10):
-- Does the code avoid security vulnerabilities, injection risks, and unhandled exceptions on invalid input?
-- Do not invent non-existent vulnerabilities. Score 8-10 for standard, clean Python logic.
-
-3. Readability (1 to 10):
-- Is the code readable, idiomatic Python (PEP 8), with clear naming and structure?
-
-4. Efficiency (1 to 10):
-- Is the time and space complexity optimal for the problem?
-
-RULES:
-- Evaluate strictly against the given problem requirements.
-- The submitted code must be valid Python. Do NOT award high scores (8-10) to placeholder, incomplete, or non-functional code.
-- Be rigorous and objective. Avoid complacency bias or leniency bias.
-- Provide a clear, honest explanation for every score.
-- Scores must be integers between 1 and 10.
-- Return valid JSON only.
-
-PROBLEM:
-{problem}
-
-SUBMITTED PYTHON CODE:
-{clean_code}
-
-Return this JSON structure:
-{{
-  "correctness": {{
-    "score": 1,
-    "explanation": "Detailed explanation of correctness"
-  }},
-  "security": {{
-    "score": 1,
-    "explanation": "Detailed explanation of security"
-  }},
-  "readability": {{
-    "score": 1,
-    "explanation": "Detailed explanation of readability"
-  }},
-  "efficiency": {{
-    "score": 1,
-    "explanation": "Detailed explanation of efficiency"
-  }}
-}}
-"""
-```
-
-#### Why Structured JSON Parsing is Critical:
-The LLM response is returned as JSON via Ollama's constrained grammar engine (`format="json"`). To guarantee defensive runtime execution, programmatic post-validation parses and asserts numerical boundaries:
-
-```python
-    try:
-        import ollama
-        response = ollama.chat(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            format="json",
-            keep_alive=0,
-        )
-        content = response["message"]["content"]
-        result = json.loads(content)
-    except Exception as exc:
-        raise RuntimeError(f"Ollama inference error with model '{model}': {exc}") from exc
-
-    scores: dict[str, int | float] = {}
-    for dimension in DIMENSIONS:
-        if dimension not in result or "score" not in result[dimension]:
-            raise ValueError(f"Judge output missing dimension or score: '{dimension}'")
-
-        score = result[dimension]["score"]
-        if isinstance(score, bool) or not isinstance(score, (int, float)):
-            raise ValueError(f"Invalid non-numeric score for {dimension}: {score}")
-
-        score_val = int(round(score))
-        if not 1 <= score_val <= 10:
-            raise ValueError(f"Score out of range [1-10] for {dimension}: {score_val}")
-
-        scores[dimension] = score_val
-
-    overall = round(sum(scores.values()) / len(DIMENSIONS), 2)
-    return result, scores, overall
-```
+* **`main.py`**:
+  * **Role:** The primary entry point and flexible command-line interface (CLI) for end-users and developers.
+  * **Functionality:** Provides both an interactive prompt and CLI arguments (`--problem`, `--code`, `--code-file`, `--generator-model`, `--judge-model`). Coordinates code generation, calls `extract_python_code()` to strip markdown wrappers, invokes `validate_python_code()`, dispatches to the judge model, and prints formatted evaluation telemetry.
+* **`evaluator.py`**:
+  * **Role:** The core point-wise LLM evaluation engine and AST guardrail definition module.
+  * **Functionality:** Houses `validate_python_code()` (multi-tier regex and AST syntactic validation), `extract_python_code()` (markdown code fence parser), and `evaluate_submission()`. It constructs the hardened, anti-bias evaluation prompt, calls Ollama in JSON mode, strictly asserts score bounds $[1, 10]$, and handles batch CSV auditing of `data/submissions.csv` writing out to `data/evaluation_results.csv`.
+* **`generator.py`**:
+  * **Role:** Automated batch Python code generation engine.
+  * **Functionality:** Iterates through 20 programming tasks defined in `data/questions.csv`. For each question, it applies three distinct prompting variations (simple/clean, efficient/edge-case handling, and alternative approach) using `qwen2.5-coder:3b`, parses the code blocks, and saves the 60 candidate programs into `data/submissions.csv`.
+* **`generate_llama_submissions.py`**:
+  * **Role:** Secondary code generation pipeline for cross-model benchmarking.
+  * **Functionality:** Generates Python code implementations for all 20 benchmark questions using `llama3.2:3b` rather than Qwen. Outputs to `data/llama_generated_submissions.csv` to allow direct self-enhancement bias testing (Llama judging Llama vs. Llama judging Qwen).
 
 ---
 
-### 3.2 Unit 3 Application: Guardrails, Defense Against Leniency Bias, and Python Language Policy
+### 3.2 Interactive Web Dashboard (`dashboard/`)
 
-A major challenge uncovered during benchmarking was **Model Hallucination and Leniency Bias**.
-
-#### The Problem Discovered:
-When tested with invalid inputs like:
-- **Bare tokens:** `"abcd"`
-- **C/C++ code:** `#include <stdio.h>\nint main() { printf("Hello"); return 0; }`
-
-The unconstrained `llama3.2:3b` model previously gave `"abcd"` a **Correctness score of 8/10, Security 10/10, and Efficiency 8/10!**
-
-#### Root Cause Analysis:
-1. **Positive Numerical Anchoring:** The initial JSON example in the prompt template contained `"score": 8`. Small language models strongly anchor to template constants when inputs are ambiguous or senseless.
-2. **Missing Language Boundaries:** The LLM received C code or random strings and attempted to hallucinate Python equivalents or assume functionality.
-
-#### The Architectural Solution:
-We designed an AST and Regex-based multi-tier pre-validation guardrail:
-
-```python
-def validate_python_code(code: str) -> tuple[bool, str]:
-    if not code or not code.strip():
-        return False, "Code snippet is empty. Please submit a valid Python implementation."
-
-    clean = extract_python_code(code)
-
-    # 1. Explicit C / C++ pattern detection
-    c_patterns = [
-        (r'#\s*include\s*[<\"].*?[>\"]', "C/C++ preprocessor directive (#include)"),
-        (r'#\s*define\s+\w+', "C/C++ macro definition (#define)"),
-        (r'\b(int|void|char|double|float|long|unsigned)\s+main\s*\(', "C/C++ main() function"),
-        (r'\b(int|void|char|double|float|long|unsigned)\s+\*+\w+', "C/C++ pointer declaration"),
-        (r'\bprintf\s*\(', "C standard library printf()"),
-        (r'\bscanf\s*\(', "C standard library scanf()"),
-        (r'\bstd::(cout|cin|endl|string|vector)\b', "C++ standard library namespace (std::)"),
-        (r'\bcout\s*<<', "C++ stream output (cout <<)"),
-        (r'\bcin\s*>>', "C++ stream input (cin >>)"),
-        (r'\b(malloc|calloc|free)\s*\(', "C dynamic memory allocation (malloc/free)"),
-        (r'\b(struct|union|typedef)\s+\w+\s*\{', "C struct/typedef definition"),
-        (r'(\bint|\bfloat|\bdouble|\bchar)\s+\w+\s*(=|;|,)', "C/C++ static type variable declaration"),
-        (r'\bfor\s*\(\s*(int\s+)?\w+\s*=\s*\d+;', "C-style for loop"),
-    ]
-    for pattern, desc in c_patterns:
-        if re.search(pattern, clean, re.IGNORECASE):
-            return False, f"Non-Python code detected ({desc}). This auditor strictly evaluates Python programs only."
-
-    # 2. Syntax validation via Python's AST parser
-    try:
-        tree = ast.parse(clean)
-    except SyntaxError as exc:
-        line_info = f" at line {exc.lineno}" if exc.lineno else ""
-        return False, f"Syntax error in Python code{line_info}: {exc.msg}. Please provide syntactically valid Python."
-
-    # 3. Check for meaningful Python executable structures
-    meaningful_nodes = (
-        ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Assign,
-        ast.AnnAssign, ast.AugAssign, ast.For, ast.While, ast.If,
-        ast.With, ast.Try, ast.Import, ast.ImportFrom, ast.Return,
-        ast.Call, ast.Yield, ast.YieldFrom, ast.Assert,
-    )
-    has_meaningful = any(isinstance(node, meaningful_nodes) for node in ast.walk(tree))
-
-    if not has_meaningful:
-        if len(tree.body) == 1 and isinstance(tree.body[0], ast.Expr):
-            val = tree.body[0].value
-            if isinstance(val, (ast.Name, ast.Constant)):
-                return False, f"Non-functional input: '{clean}' is only a bare identifier or literal with no executable logic."
-        return False, "Submitted snippet does not contain functional Python definitions or statements."
-
-    return True, ""
-```
+* **`dashboard/app.py`**:
+  * **Role:** The full-stack interactive Streamlit web application.
+  * **Functionality:** Exposes 5 interactive navigation tabs:
+    1. *Project Overview:* Research goals, team credentials, model specifications, and high-level pass rates.
+    2. *Code Evaluation:* Real-time live code auditor where users input problem descriptions and paste code; includes dynamic model selection and validation alerts.
+    3. *Functional Testing:* Interactive test bench where users run submissions against ground-truth unit tests.
+    4. *Research Results:* Interactive charts plotting LLM vs. functional accuracy, position bias, and score distributions.
+    5. *About the Experiments:* Technical methodologies.
+* **`dashboard/services.py`**:
+  * **Role:** Backend business logic, telemetry recorder, and sandboxed test execution layer for the dashboard.
+  * **Functionality:** Exposes `evaluate_live()` which logs live runs to `data/live_evaluations/evaluations.jsonl`, `available_models()` for dynamic Ollama discovery, and `run_functional()` which executes candidate code within an isolated, resource-constrained Python subprocess (`-I -S`) with strict 3-second timeouts.
 
 ---
 
-### 3.3 Prompt Refinement & Markdown Boundary Normalization
+### 3.3 Functional Testing & Benchmark Ground Truth
 
-When using conversational code models like `qwen2.5-coder:3b`, responses contain natural language conversational wrappers:
-```markdown
-Certainly! Below is a simple Python code block that adds two numbers:
-```python
-def add_numbers(a, b):
-    return a + b
-```
-Hope this helps!
-```
-
-If passed directly into `ast.parse()`, line 1 (`"Certainly!..."`) raises `SyntaxError: invalid syntax`, triggering a false-positive rejection.
-
-To resolve this, we introduced regex markdown block extraction:
-
-```python
-def extract_python_code(text: str) -> str:
-    """Extract code from markdown code fences if present; otherwise return stripped text."""
-    if not text:
-        return ""
-    clean = text.strip()
-    match = re.search(r"```(?:python)?\s*\n?(.*?)\n?```", clean, re.DOTALL | re.IGNORECASE)
-    if match:
-        return match.group(1).strip()
-    return clean
-```
+* **`benchmark_config.py`**:
+  * **Role:** Centralized configuration mapping problem IDs to expected function interfaces and normalization rules.
+  * **Functionality:** Defines `FUNCTION_MAP` (allowing alternative function names such as `["factorial", "calculate_factorial"]` generated across prompt variations) and `BENCHMARK_RULES` specifying input/output conventions (e.g. case sensitivity, sorted duplicates).
+* **`test_cases.py`**:
+  * **Role:** The deterministic ground-truth test suite dictionary.
+  * **Functionality:** Contains comprehensive input-output test tuples for all 20 benchmark tasks (P01 to P20), covering normal cases, extreme edge cases (empty strings, zero, negative numbers, singletons), and boundary conditions.
+* **`universal_test_runner.py`**:
+  * **Role:** Automated batch test harness for Qwen-generated code submissions.
+  * **Functionality:** Uses Python AST parsing to isolate target functions and dependencies, dynamically constructs test harness wrappers, executes each test case in a sandboxed subprocess, and generates `data/correctness_results.csv` and `data/correctness_test_details.csv`.
+* **`test_llama_submissions.py`**:
+  * **Role:** Automated batch test harness for Llama-generated code submissions.
+  * **Functionality:** Mirrors `universal_test_runner.py` but executes against `data/llama_generated_submissions.csv`, writing pass/fail ground truth to `data/llama_correctness_results.csv`.
+* **`test_submissions.py`**:
+  * **Role:** Baseline prototype script for functional testing on initial tasks (P01 primality).
+* **`test_prime_fixed.py`**:
+  * **Role:** Focused regression test harness for Task P01 (primality checking) handling edge cases like negative inputs and boundary integers.
+* **`test_sorting_adapter.py`**:
+  * **Role:** Test adapter for Task P05 (sorting algorithms). Resolves differences between mutating in-place sorts and functions that return new lists.
+* **`test_parentheses_adapter.py`**:
+  * **Role:** Test adapter for Task P16 (balanced parentheses) to evaluate stack algorithms against malformed strings.
+* **`test_password_adapter.py`**:
+  * **Role:** Test adapter for Task P20 (password validation) reconciling boolean return values vs. descriptive status strings.
 
 ---
 
-### 3.4 Unit 4 Application: Sandboxed Subprocess Functional Testing
+### 3.4 Bias Measurement & Experimental Studies
 
-The system provides an empirical ground truth by testing candidate code against predetermined test fixtures (`test_cases.py`) inside an isolated Python subprocess without third-party network access.
+* **`pairwise_evaluator.py`**:
+  * **Role:** Pairwise comparative preference evaluation engine.
+  * **Functionality:** Presents the LLM judge with two competing code solutions (Code A vs. Code B) for the same problem from `data/external_human_dataset/human-preference-alignment.jsonl.gz`. Instructs the judge to select the superior solution (A, B, or Tie) and compares selections against human ground-truth labels.
+* **`controlled_position_bias.py`**:
+  * **Role:** Controlled order-reversal experiment runner.
+  * **Functionality:** Tests for **Position Bias** by evaluating code pairs in `(A, B)` order, then in swapped `(B, A)` order under deterministic settings (`temperature=0, seed=42`). Calculates the exact percentage of instances where the judge reverses its preference solely due to input order.
+* **`position_bias_evaluator.py`**:
+  * **Role:** Alternative position bias pipeline measuring first-position selection rates on human datasets.
+* **`controlled_verbosity_scoring.py`**:
+  * **Role:** Controlled test harness for **Verbosity Bias**.
+  * **Functionality:** Takes clean code submissions and creates synthetic variants by injecting elaborate explanatory docstrings and commentary without changing functional logic. Scores both variants with Llama 3.2 3B to detect whether the judge inflates scores for longer/comment-heavy code.
+* **`neutral_verbosity_scoring.py`**:
+  * **Role:** Randomized, balanced verbosity experiment runner alternating the presentation order of concise vs. verbose implementations to eliminate position confounding.
+* **`verbosity_bias_evaluator.py`**:
+  * **Role:** Pairwise verbosity tournament judge selecting preferences between concise vs. comment-padded solutions.
+* **`self_enhancement_evaluator.py`**:
+  * **Role:** Pairwise **Self-Enhancement Bias** evaluator.
+  * **Functionality:** Pairs a Qwen-generated solution with a Llama-generated solution for the same task and asks Llama 3.2 3B to judge which is superior. Compares preference rates to detect in-family model favoritism.
+* **`self_enhancement_pointwise.py`**:
+  * **Role:** Point-wise variant of self-enhancement testing comparing absolute dimension scores assigned by Llama to its own code versus code generated by Qwen.
 
-```python
-def _run_case(clean_code: str, function_name: str, args: tuple, timeout: int = 3):
-    worker = (
-        "import json\n" + clean_code + "\n"
-        + f"_result = {function_name}(*{args!r})\n"
-        + "print('__DASHBOARD_RESULT__' + json.dumps(_result))\n"
-    )
-    environment = {
-        key: os.environ[key]
-        for key in ("PATH", "SystemRoot", "WINDIR", "TEMP", "TMP")
-        if key in os.environ
-    }
-    with tempfile.TemporaryDirectory(prefix="code-audit-") as cwd:
-        process = subprocess.run(
-            [sys.executable, "-I", "-S", "-c", worker],
-            cwd=cwd,
-            env=environment,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=False,
-        )
-    if process.returncode:
-        raise RuntimeError((process.stderr or "Process exited with an error")[-2000:])
-    lines = [line for line in process.stdout.splitlines() if line.startswith("__DASHBOARD_RESULT__")]
-    if not lines:
-        raise ValueError("Function did not return a JSON-serializable result.")
-    return json.loads(lines[-1].removeprefix("__DASHBOARD_RESULT__"))
-```
+---
 
-The flags `-I` (isolated mode) and `-S` (don't import `site` packages) prevent the untrusted code from modifying user libraries or accessing ambient state.
+### 3.5 Analysis, Inspection & Human Alignment Tools
+
+* **`analyze_all_dimensions.py`**:
+  * **Role:** Statistical profiling utility across all 4 evaluation dimensions.
+  * **Functionality:** Computes mean, standard deviation, min, max, and unique value distributions for Correctness, Security, Readability, and Efficiency from `data/evaluation_results.csv`.
+* **`analyze_score_distribution.py`**:
+  * **Role:** Granular distribution analyzer calculating frequency histograms of assigned judge scores.
+* **`analyze_pairwise_results.py`**:
+  * **Role:** Evaluates judge-human alignment by computing agreement percentages between LLM pairwise choices and human consensus annotations.
+* **`analyze_qwen_reliability.py`**:
+  * **Role:** Cross-references Qwen code evaluations against functional test outcomes to calculate false-positive and false-negative audit rates.
+* **`analyze_self_enhancement.py`**:
+  * **Role:** Computes summary statistics on whether Llama preferentially rated Llama-authored code over Qwen-authored code.
+* **`compare_llm_vs_functional.py`**:
+  * **Role:** Generates correlation matrices and scatter-plot data linking the judge's subjective Correctness score against objective test pass percentages.
+* **`final_research_analysis.py`**:
+  * **Role:** Master charting and visualization script.
+  * **Functionality:** Uses `matplotlib` and `seaborn` to render and save all publication-grade figures in `data/final_graphs/` (e.g. score distributions, position sensitivity bars, pass rate comparisons).
+* **`create_human_template.py`**:
+  * **Role:** Generates standardized annotation templates (`data/human_annotations.csv`) for human reviewers.
+* **`create_reviewer_files.py`**:
+  * **Role:** Generates formatted multi-tab Excel review workbooks with instructions, rubrics, and submission slices for human grading teams.
+* **`inspect_submissions.py`**:
+  * **Role:** Command-line preview tool to inspect generated submission records and code blocks.
+* **`inspect_interfaces.py`**:
+  * **Role:** AST analysis script scanning all generated submissions to identify defined function names and argument signatures.
+* **`inspect_failures.py`**:
+  * **Role:** Diagnostic tool filtering and displaying all submissions that failed functional test suites.
+* **`inspect_returns.py`**:
+  * **Role:** Inspects runtime return types of candidate functions to identify type mismatches against test assertions.
+* **`inspect_external_dataset.py`**:
+  * **Role:** Validates structure and headers of the external human preference benchmark dataset.
+* **`check_p05_syntax.py` & **`check_p16_syntax.py`**:
+  * **Role:** Focused syntactic AST integrity checkers for complex sorting and stack problem submissions.
+
+---
+
+### 3.6 Automated Unit Tests (`tests/`)
+
+* **`tests/__init__.py`**:
+  * **Role:** Declares the `tests/` directory as a standard Python test package.
+* **`tests/test_validation.py`**:
+  * **Role:** Automated unit test suite verifying language enforcement, boundary protection, and AST validation.
+  * **Functionality:** Contains 7 standalone test methods using Python's `unittest` framework:
+    * `test_rejects_empty_and_whitespace`: Ensures empty submissions are rejected.
+    * `test_rejects_bare_identifier_and_literals`: Verifies that gibberish like `"abcd"` or numbers like `12345` are rejected.
+    * `test_rejects_c_and_cpp_code`: Asserts that C/C++ code (`#include`, `int main()`, `printf()`, `malloc`) is intercepted.
+    * `test_rejects_syntax_errors`: Confirms broken Python syntax is caught.
+    * `test_accepts_valid_python`: Confirms valid functions, classes, and markdown-wrapped code are accepted.
+    * `test_evaluate_submission_rejects_abcd`: Verifies deterministic 1/10 scoring on gibberish.
+    * `test_evaluate_submission_rejects_c_code`: Verifies deterministic 1/10 scoring on C snippets.
 
 ---
 
